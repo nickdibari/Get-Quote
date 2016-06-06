@@ -4,8 +4,8 @@
 #* Prints quote from brainyquote.com from author *# 
 #* that user provides                            *#
 #* --------------------------------------------- *#
-#* Provides user interface for Get Quote Data    *#
-#* Base Management                               *#
+#* Provides user interface for Get Quote         *#
+#* DataBase Management                           *#
 #* --------------------------------------------- *#
 
 import sys # Get argument
