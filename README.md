@@ -1,6 +1,7 @@
 # Get-Quote
 OVERVIEW:
       Python program to scrape brainyquote.com for quotes from a user entered author
+      
       Also contains a DataBase feature to store and search for previously viewed quotes
       
       REQUIRES BeautifulSoup4 and Shelve to work
