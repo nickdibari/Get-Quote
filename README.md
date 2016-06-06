@@ -8,12 +8,12 @@ OVERVIEW:
 
 USAGE:
 
-            ./Get_Quote.py AUTHOR
+            ./GetQuote.py AUTHOR
                   Returns 10 quotes from brainyquote.com that match author user provides
                   Prompts user if they want to save any quotes into DataBase
             
-            ./Get_Quote.py -d [or -D]
+            ./GetQuote.py -d 
                   DataBase Manager for storing previously searched quotes
             
-            ./Get_Quote.py -h [or -help]
+            ./GetQuote.py -h [or -help]
                   Displays the different usages 
