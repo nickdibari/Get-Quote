@@ -1,11 +1,13 @@
 # Get-Quote
 
 ## Overview
-      Python program to scrape brainyquote.com for quotes from a user entered author. Also contains a DataBase feature to store and search for previously viewed quotes
-      
-      REQUIRES BeautifulSoup4 and Shelve to work
-      
-      Will create a file in directory named .Quotes.db
+Python program to scrape brainyquote.com for quotes from a user entered author. Also contains a DataBase feature to store and search for previously viewed quotes
+
+Will create a file in directory named .Quotes.db
+
+## Requirements
+* [BeautifulSoup4](https://pypi.python.org/pypi/beautifulsoup4)
+* [Shelve](https://docs.python.org/2/library/shelve.html)
 
 ## Usage
  ```
