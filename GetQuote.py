@@ -27,7 +27,7 @@ def GetQuote(author):
     HTML.raise_for_status() #Check to ensure page was downloaded correctly
 
     #Create Beautiful Soup object to parse
-    QuoteObject = bs4.BeautifulSoup(HTML.text)
+    QuoteObject = bs4.BeautifulSoup(HTML.text, "html.parser")
 
     #Parse Beautiful Soup object for quote
     quotes = QuoteObject.select('.bqQuoteLink a') #Returns the element <a> located within class 'bqQuoteLink'
