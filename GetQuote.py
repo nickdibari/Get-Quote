@@ -142,7 +142,7 @@ def SearchQuote(quotes_DB):
         else:
             print("Found the following quotes by " + to_search + ": ")
             for j in range(len(matches)):
-                print matches[j]
+                print (matches[j])
                 print("-----------------------------------------------")
         
         matches = [] # Reset list
