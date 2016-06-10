@@ -101,7 +101,7 @@ def DeleteQuote(quotes_DB):
     choice=input("Please select the title of the quote to delete: ")
     
     while int(choice)>len(keys) or int(choice)<0:
-        choice=raw_input("That is not a valid input. Enter a number between 0 and " + str(len(keys)) + ": ")
+        choice=input("That is not a valid input. Enter a number between 0 and " + str(len(keys)) + ": ")
 
     #Get quote to delete 
     quote = quotes_DB.get(keys[int(choice)])
