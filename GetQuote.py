@@ -1,4 +1,4 @@
-#! /usr/bin/python2.7
+#! /usr/bin/python3
 #* GetQuote.py                                   *#
 #* Nicholas DiBari                               *#
 #* Prints quote from brainyquote.com from author *# 
@@ -54,7 +54,7 @@ def SaveQuote(quotes_DB, quotes, author):
     #Main Loop
     while True:
         # Prompt user to select quote to save
-        choice=raw_input("Please pick a quote to save (or enter done to exit): ")
+        choice=input("Please pick a quote to save (or enter done to exit): ")
         
         #CASE 1 [EXIT]. Check if user wishes to exit program
         if str(choice) == "done":
@@ -98,7 +98,7 @@ def DeleteQuote(quotes_DB):
     for i in range(len(keys)):
         print(str(i) + ". " + keys[i])
     
-    choice=raw_input("Please select the title of the quote to delete: ")
+    choice=input("Please select the title of the quote to delete: ")
     
     while int(choice)>len(keys) or int(choice)<0:
         choice=raw_input("That is not a valid input. Enter a number between 0 and " + str(len(keys)) + ": ")
@@ -111,7 +111,7 @@ def DeleteQuote(quotes_DB):
     print(keys[int(choice)] + ": ")
     print(quote)
     print("-----------------------------------------------")
-    confirm = raw_input()
+    confirm = input()
     
     #Delete quote from dictionary
     if confirm == 'y' or confirm == 'Y':
@@ -127,7 +127,7 @@ def SearchQuote(quotes_DB):
     #Main Loop
     while True:
         #Get author to search for
-        to_search = raw_input("Please enter an author to search for: ")
+        to_search = input("Please enter an author to search for: ")
     
         #Go through list of authors, check if entered author is in any of the previous entries
         for i in range(len(authors)):
@@ -141,6 +141,7 @@ def SearchQuote(quotes_DB):
         #Else, print matches
         else:
             print("Found the following quotes by " + to_search + ": ")
+            print(" ")
             for j in range(len(matches)):
                 print (matches[j])
                 print("-----------------------------------------------")
@@ -158,7 +159,7 @@ def DataBase_Manager(quotes_DB):
         print("2. Delete a Quote")
         print("3. Search for author")
         print("4. [EXIT]")
-        choice = raw_input()
+        choice = input()
         
         # ERROR CHECK
         if int(choice)<1 or int(choice)>4:
