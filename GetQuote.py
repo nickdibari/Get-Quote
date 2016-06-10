@@ -147,7 +147,7 @@ def SearchQuote(quotes_DB):
                 print("-----------------------------------------------")
         
         matches = [] # Reset list
-        choice = raw_input("Would you like you search again? (y/n): ")
+        choice = input("Would you like you search again? (y/n): ")
         if choice == 'n' or choice == 'N':
             break
 
