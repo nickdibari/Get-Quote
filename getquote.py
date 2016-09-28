@@ -98,7 +98,6 @@ def DeleteQuote(quotes_DB):
     
     choice=input('Please select the title of the quote to delete: ')
     
-    print(list(quotes_DB.keys()))
     while choice not in list(quotes_DB.keys()):
         choice=input('Input not found. Please enter the title of the quote to delete: ')
         
