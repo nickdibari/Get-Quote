@@ -75,20 +75,11 @@ def SaveQuote(quotes_DB, quotes, author):
 
 #5. Print Quotes
 def PrintDB(quotes_DB):
-    #List of keys (Authors)
-    keys = list(quotes_DB.keys())
-    
-    #List of values (Quotes)
-    values = list(quotes_DB.values())
-    
-    #If the two lengths are not the same, trigger Error
-    assert len(keys) == len(values)
-    
     #Print authors/quotes
-    for i in range(len(keys)):
-        print(keys[i] + ": ")
-        print(values[i])
-        print("-----------------------------------------------")
+    for key, value in quotes_DB.items():
+        print('{0} : '.format(key))
+        print(value)
+        print('-----------------------------------------------')
 
 #6. Delete Quote
 def DeleteQuote(quotes_DB):
