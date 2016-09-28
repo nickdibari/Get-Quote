@@ -11,18 +11,18 @@ Will create a file in directory named .Quotes.db
 
 ## Usage
  ```
-./getQuote.py AUTHOR
+./getquote.py AUTHOR
 ```
 Returns 10 quotes from brainyquote.com that match author user provides
 Prompts user if they want to save any quotes into DataBase
 
 ```
-./getQuote.py -d
+./getquote.py -d
 ``` 
 DataBase Manager for storing previously searched quotes
 
 ```
-./getQuote.py -h [or -help]
+./getquote.py -h [or -help]
 ```
 Displays the different usages 
 
