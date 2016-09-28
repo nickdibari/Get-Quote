@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+
 #* GetQuote.py                                   *#
 #* Nicholas DiBari                               *#
 #* Prints quote from brainyquote.com from author *# 
@@ -91,31 +92,29 @@ def PrintDB(quotes_DB):
 
 #6. Delete Quote
 def DeleteQuote(quotes_DB):
-    #List of keys (Authors)
-    keys = list(quotes_DB.keys())
-    
     #Print list of authors 
-    for i in range(len(keys)):
-        print(str(i) + ". " + keys[i])
+    for key in quotes_DB.keys():
+        print(key)
     
-    choice=input("Please select the title of the quote to delete: ")
+    choice=input('Please select the title of the quote to delete: ')
     
-    while int(choice)>len(keys) or int(choice)<0:
-        choice=input("That is not a valid input. Enter a number between 0 and " + str(len(keys)) + ": ")
-
+    print(list(quotes_DB.keys()))
+    while choice not in list(quotes_DB.keys()):
+        choice=input('Input not found. Please enter the title of the quote to delete: ')
+        
     #Get quote to delete 
-    quote = quotes_DB.get(keys[int(choice)])
+    quote = quotes_DB.get(choice)
     
     #Print quote to delete
-    print("Are you sure you want to do delete the following quote (y/n): ")
-    print(keys[int(choice)] + ": ")
+    print(choice + ": ")
     print(quote)
     print("-----------------------------------------------")
-    confirm = input()
+    confirm = input('Are you sure you want to do delete this quote (y/n): ')
+
     
     #Delete quote from dictionary
     if confirm == 'y' or confirm == 'Y':
-        del quotes_DB[keys[int(choice)]]
+        del quotes_DB[choice]
         print("Deleted\n")
 
 #7. Search Quote
@@ -195,16 +194,16 @@ def Main():
        
     #ERROR: NO ARGS
     if len(sys.argv) == 1:
-        print("ERROR: Enter -h or -help for help")
+        print("ERROR: Enter -h or --help for help")
         exit(1)
     
     #Help 
-    if sys.argv[1] == '-h' or sys.argv[1] == '-help':
+    if sys.argv[1] == '-h' or sys.argv[1] == '--help':
         print("GET_QUOTE.PY")
-        print("1) Get_Quote.py AUTHOR")
+        print("1) getguote.py AUTHOR")
         print("   Usage: Return first 10 quotes from author found on\nbrainyquote.com")
-        print("2) Getquote.py -d [or -D]")
-        print("   Usage: Database Management for Get_Quote Program")
+        print("2) getquote.py -d [or -D]")
+        print("   Usage: Database Management for getquote Program")
         exit(0)
         
     #Database Management
@@ -223,4 +222,5 @@ def Main():
     
     
 
-Main()
+if __name__ == '__main__':
+    Main()
