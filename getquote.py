@@ -142,7 +142,8 @@ def SearchQuote(quotes_DB):
 
 #8. Database Management
 def DataBase_Manager(quotes_DB):
-    while True:
+    flag = True
+    while flag:
         print("Please enter a choice:")
         print("1. Print all Quotes")
         print("2. Delete a Quote")
@@ -168,7 +169,7 @@ def DataBase_Manager(quotes_DB):
         
         # [EXIT]
         elif int(choice) == 4:
-            exit(0)
+            flag = False
         
         # ERROR CHECK
         else:
