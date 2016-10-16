@@ -110,8 +110,6 @@ def DeleteQuote(quotes_DB):
 #7. Search Quote
 def SearchQuote(quotes_DB):
     matches = [] # list of matched quotes
-    authors = list(quotes_DB.keys()) #Get list of authors
-    quotes = list(quotes_DB.values()) #Get list of aquotes
     
     #Main Loop
     while True:
@@ -119,9 +117,9 @@ def SearchQuote(quotes_DB):
         to_search = input("Please enter an author to search for: ")
     
         #Go through list of authors, check if entered author is in any of the previous entries
-        for i in range(len(authors)):
-            if to_search in authors[i]:
-                matches.append(quotes[i])
+        for key in quotes_DB.keys():
+            if to_search in key:
+                matches.append(quotes_DB[key])
 
         #If no matches, alert user no match was found
         if not matches:
@@ -131,8 +129,8 @@ def SearchQuote(quotes_DB):
         else:
             print("Found the following quotes by " + to_search + ": ")
             print(" ")
-            for j in range(len(matches)):
-                print (matches[j])
+            for quote in matches:
+                print(quote)
                 print("-----------------------------------------------")
         
         matches = [] # Reset list
