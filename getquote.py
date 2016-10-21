@@ -52,9 +52,8 @@ def PrintQuotes(quotes, author):
 
 #4. Save Quote
 def SaveQuote(quotes_DB, quotes, author):  
-    #Main Loop
+    
     while True:
-        # Prompt user to select quote to save
         choice=input("Please pick a quote to save (or enter done to exit): ")
         
         #CASE 1 [EXIT]. Check if user wishes to exit program
@@ -75,15 +74,13 @@ def SaveQuote(quotes_DB, quotes, author):
 
 #5. Print Quotes
 def PrintDB(quotes_DB):
-    #Print authors/quotes
     for key, value in quotes_DB.items():
         print('{0} : '.format(key))
         print(value)
         print('-----------------------------------------------')
 
 #6. Delete Quote
-def DeleteQuote(quotes_DB):
-    #Print list of authors 
+def DeleteQuote(quotes_DB): 
     for key in quotes_DB.keys():
         print(key)
     
@@ -111,7 +108,6 @@ def DeleteQuote(quotes_DB):
 def SearchQuote(quotes_DB):
     matches = [] # list of matched quotes
     
-    #Main Loop
     while True:
         #Get author to search for
         to_search = input("Please enter an author to search for: ")
@@ -176,10 +172,7 @@ def DataBase_Manager(quotes_DB):
     
 #Main Function
 def Main():
-    #Database Declaration
     quotes_DB=shelve.open('.Quotes.db')
-    author = " " # Author to search for
-    quotes = [] # List of quotes returned
        
     #ERROR: NO ARGS
     if len(sys.argv) == 1:
