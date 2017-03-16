@@ -23,6 +23,8 @@ def GetAuthor():
 
 #2. Get Quote
 def GetQuote(author):
+    results = []
+
     #Open website with requests 
     HTML = requests.get('http://brainyquote.com/search_results.html?q=' + author )
     HTML.raise_for_status() #Check to ensure page was downloaded correctly
@@ -31,8 +33,13 @@ def GetQuote(author):
     QuoteObject = bs4.BeautifulSoup(HTML.text, "html.parser")
 
     #Parse Beautiful Soup object for quote
-    quotes = QuoteObject.select('.bqQuoteLink a') #Returns the element <a> located within class 'bqQuoteLink'
-    return quotes
+    quotes = QuoteObject.select('#quotesList a') #Returns the element <a> located within class 'quotesList'
+
+    for quote in quotes:
+      if quote.get('title') == 'view quote':
+          results.append(quote)
+
+    return results
 
 
 
