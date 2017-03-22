@@ -189,7 +189,7 @@ def Main():
     #Help 
     if sys.argv[1] == '-h' or sys.argv[1] == '--help':
         print("GET_QUOTE.PY")
-        print("1) getguote.py AUTHOR")
+        print("1) getquote.py AUTHOR")
         print("   Usage: Return first 10 quotes from author found on\nbrainyquote.com")
         print("2) getquote.py -d [or -D]")
         print("   Usage: Database Management for getquote Program")
