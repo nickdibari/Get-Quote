@@ -191,12 +191,12 @@ def Main():
         print("GET_QUOTE.PY")
         print("1) getquote.py AUTHOR")
         print("   Usage: Return first 10 quotes from author found on\nbrainyquote.com")
-        print("2) getquote.py -d [or -D]")
+        print("2) getquote.py -d [or --database]")
         print("   Usage: Database Management for getquote Program")
         exit(0)
         
     #Database Management
-    if sys.argv[1] == '-d' or sys.argv[1] == '-D':
+    if sys.argv[1] == '-d' or sys.argv[1] == '--database':
         DataBase_Manager(quotes_DB)
     
     #Search Option

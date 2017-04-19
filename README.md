@@ -17,7 +17,7 @@ Returns 10 quotes from brainyquote.com that match author user provides
 Prompts user if they want to save any quotes into DataBase
 
 ```
-./getquote.py -d
+./getquote.py -d [or --database]
 ``` 
 DataBase Manager for storing previously searched quotes
 
