@@ -22,7 +22,7 @@ Prompts user if they want to save any quotes into DataBase
 DataBase Manager for storing previously searched quotes
 
 ```
-./getquote.py -h [or -help]
+./getquote.py -h [or --help]
 ```
 Displays the different usages 
 
