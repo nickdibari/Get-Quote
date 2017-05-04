@@ -18,10 +18,11 @@ from database import DataBaseManager
 
 ### Arg Parser Definition
 def ArgParser():
-    parser = argparse.ArgumentParser(description='The easy to use Quote Finder')
+    parser = argparse.ArgumentParser(prog='./getquote', usage='%(prog)s AUTHOR [options]',
+                                     description='The easy to use Quote Finder')
 
-    parser.add_argument('-s', action='store', dest='simple_value',
-                        help='Store a simple value')
+    parser.add_argument('author', metavar='AUTHOR', action='store', help='Search for quotes from AUTHOR')
+    parser.add_argument('-n', action='store', type=int, default=10, dest='numQuotes', help='Will print N number of retrieved quotes (default 10)')
 
     return parser
 
@@ -101,24 +102,12 @@ def Main():
     #quotes_DB=shelve.open('.Quotes.db')
 
     parser = ArgParser()
-    args = parser.parse_args()
-    '''
-    #ERROR: NO ARGS
-    if len(sys.argv) == 1:
-        print("ERROR: Enter -h or --help for help")
-        exit(1)
+    args = parser.parse_args(sys.argv[1:])
     
-    #Help 
-    if sys.argv[1] == '-h' or sys.argv[1] == '--help':
-        print("GET_QUOTE.PY")
-        print("1) getquote.py AUTHOR")
-        print("   Usage: Return first 10 quotes from author found on\nbrainyquote.com")
-        print("2) getquote.py -d [or --database]")
-        print("   Usage: Database Management for getquote Program")
-        exit(0)
-        
+    print(args)
+    '''
     #Database Management
-    if sys.argv[1] == '-d' or sys.argv[1] == '--database':
+    if args.DB:
         DataBaseManager(quotes_DB)
     
     #Search Option
@@ -127,10 +116,9 @@ def Main():
         quotes = GetQuote(author)
         PrintQuotes(quotes, author)
         SaveQuote(quotes_DB, quotes, author)
-    
-    print("Goodbye!")   
-    quotes_DB.close() # Close Database
     '''
+    print("Goodbye!")
+    #quotes_DB.close() # Close Database
 
 if __name__ == '__main__':
     Main()
