@@ -13,7 +13,7 @@ import bs4 # Parsing HTML
 import shelve # Database Management
 from datetime import datetime # Date/Time Information
 
-from database import DataBase_Manager
+from database import DataBaseManager
 
 #1. Get name of author to search for
 def GetAuthor():
@@ -106,7 +106,7 @@ def Main():
         
     #Database Management
     if sys.argv[1] == '-d' or sys.argv[1] == '--database':
-        DataBase_Manager(quotes_DB)
+        DataBaseManager(quotes_DB)
     
     #Search Option
     else:

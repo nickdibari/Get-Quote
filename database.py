@@ -72,7 +72,7 @@ def SearchQuote(quotes_DB):
             break
 
 #4. Database Management
-def DataBase_Manager(quotes_DB):
+def DataBaseManager(quotes_DB):
     flag = True
     
     while flag:
