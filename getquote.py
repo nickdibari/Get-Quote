@@ -11,9 +11,19 @@ import sys # Get argument
 import requests # Get HTML
 import bs4 # Parsing HTML
 import shelve # Database Management
+import argparse # Command line argument parsing
 from datetime import datetime # Date/Time Information
 
 from database import DataBaseManager
+
+### Arg Parser Definition
+def ArgParser():
+    parser = argparse.ArgumentParser(description='The easy to use Quote Finder')
+
+    parser.add_argument('-s', action='store', dest='simple_value',
+                        help='Store a simple value')
+
+    return parser
 
 #1. Get name of author to search for
 def GetAuthor():
@@ -88,8 +98,11 @@ def SaveQuote(quotes_DB, quotes, author):
     
 #Main Function
 def Main():
-    quotes_DB=shelve.open('.Quotes.db')
-       
+    #quotes_DB=shelve.open('.Quotes.db')
+
+    parser = ArgParser()
+    args = parser.parse_args()
+    '''
     #ERROR: NO ARGS
     if len(sys.argv) == 1:
         print("ERROR: Enter -h or --help for help")
@@ -117,6 +130,7 @@ def Main():
     
     print("Goodbye!")   
     quotes_DB.close() # Close Database
+    '''
 
 if __name__ == '__main__':
     Main()
