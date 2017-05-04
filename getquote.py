@@ -64,20 +64,27 @@ def SaveQuote(quotes_DB, quotes, author):
         choice=input("Please pick a quote to save (or enter done to exit): ")
         
         #CASE 1 [EXIT]. Check if user wishes to exit program
-        if str(choice) == "done":
+        if choice == "done":
             break
         
-        #CASE 2 [INPUT ERROR]. Check that number is in rangee
-        elif int(choice)<0 or int(choice)>len(quotes):
-            print("That is an invalid input. Please enter a number between 0 and " + len(quotes))
-            
-        #CASE 3 [BASE CASE]. Add selected quote to database
         else:
-            DateTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S') # Get current date/time
-            Author_to_Add = str(author) + " " + DateTime # Get name of author for quote
-            Quote_to_Add = str(quotes[int(choice)].getText()) # Get quote to add
-            quotes_DB[Author_to_Add] = Quote_to_Add
-            print("\nSaved the quote you picked by " + author + ". Good choice\n")
+            try:
+                choice = int(choice)
+
+                #CASE 2 [INPUT ERROR]. Check that number is in rangee
+                if choice<0 or choice>len(quotes):
+                    print("That is an invalid input. Please enter a number between 0 and " + len(quotes))
+
+                #CASE 3 [BASE CASE]. Add selected quote to database
+                else:
+                    DateTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S') # Get current date/time
+                    Author_to_Add = str(author) + " " + DateTime # Get name of author for quote
+                    Quote_to_Add = str(quotes[int(choice)].getText()) # Get quote to add
+                    quotes_DB[Author_to_Add] = Quote_to_Add
+                    print("Saved the quote you picked by " + author + ". Good choice")
+
+            except ValueError:
+                print('Enter in a number silly!')
 
 #5. Print Quotes
 def PrintDB(quotes_DB):
