@@ -16,7 +16,7 @@ from datetime import datetime # Date/Time Information
 
 #1. Arg Parser Definition
 def ArgParser():
-    parser = argparse.ArgumentParser(prog='./getquote',
+    parser = argparse.ArgumentParser(prog='./getquote.py',
                                      usage='%(prog)s AUTHOR [options]',
                                      description='The easy to use Quote Finder')
 
