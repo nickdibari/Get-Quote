@@ -41,13 +41,13 @@ def DeleteQuote(quotes_DB):
 
     # Get quote to delete
     quoteKey = userDict.get(choice)
-    to_delete = quotes_DB.get(quoteKey)
+    quote = quotes_DB.get(quoteKey)
 
     # Print quote to delete
     print('{}: '.format(quoteKey))
-    print(to_delete)
+    print(quote)
     print('-' * 45)
-    confirm = input('Are you sure you want to do delete this quote (y/n): ')
+    confirm = input('Are you sure you want to delete this quote (y/n): ')
 
     if confirm == 'y' or confirm == 'Y':
         del quotes_DB[quoteKey]
