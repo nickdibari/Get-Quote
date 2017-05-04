@@ -11,19 +11,33 @@ import sys # Get argument
 import requests # Get HTML
 import bs4 # Parsing HTML
 import shelve # Database Management
+import argparse # Command line argument parsing
 from datetime import datetime # Date/Time Information
 
-from database import DataBaseManager
+#1. Arg Parser Definition
+def ArgParser():
+    parser = argparse.ArgumentParser(prog='./getquote.py',
+                                     usage='%(prog)s AUTHOR [options]',
+                                     description='The easy to use Quote Finder')
 
-#1. Get name of author to search for
-def GetAuthor():
-    author = ' '.join(sys.argv[1:])
-    print("Searching for " + author + "...")
-    return author
+    parser.add_argument('author', metavar='AUTHOR', nargs='*',
+                        help='Search for quotes from AUTHOR')
+
+    parser.add_argument('-n', action='store', type=int, default=10,
+                        dest='numQuotes',
+                        help='will print NUMQUOTES number of retrieved quotes\
+                             (default 10)')
+
+    parser.add_argument('-q', '--quiet', action='store_true', default=False,
+                        dest='quiet', help='set to ignore saving quotes to DB')
+
+    return parser
 
 #2. Get Quote
 def GetQuote(author):
     results = []
+
+    print('Searching for {}...'.format(author))
 
     #Open website with requests 
     HTML = requests.get('http://brainyquote.com/search_results.html?q=' + author )
@@ -41,19 +55,17 @@ def GetQuote(author):
 
     return results
 
-
-
 #3. Print Quote
-def PrintQuotes(quotes, author):
-    #Get number of quotes to print. I didn't want to print all of the quotes, so I set the max allowed to print
-    #to 10
-    num_quotes = min(10, len(quotes))
+def PrintQuotes(quotes, author, numQuotes):
+
+    if numQuotes > len(quotes):
+        numQuotes = len(quotes)
 
     #Print all quotes retrievd
     print(" ")
     print("Found the following matches for " + author + ":")
     print("-----------------------------------------------")
-    for i in range(num_quotes):
+    for i in range(numQuotes):
         print(str(i) + ". " + quotes[i].getText())
         print(' ')
 
@@ -89,33 +101,26 @@ def SaveQuote(quotes_DB, quotes, author):
 #Main Function
 def Main():
     quotes_DB=shelve.open('.Quotes.db')
-       
-    #ERROR: NO ARGS
-    if len(sys.argv) == 1:
-        print("ERROR: Enter -h or --help for help")
-        exit(1)
+
+    parser = ArgParser()
+    args = parser.parse_args(sys.argv[1:])
     
-    #Help 
-    if sys.argv[1] == '-h' or sys.argv[1] == '--help':
-        print("GET_QUOTE.PY")
-        print("1) getquote.py AUTHOR")
-        print("   Usage: Return first 10 quotes from author found on\nbrainyquote.com")
-        print("2) getquote.py -d [or --database]")
-        print("   Usage: Database Management for getquote Program")
-        exit(0)
-        
-    #Database Management
-    if sys.argv[1] == '-d' or sys.argv[1] == '--database':
-        DataBaseManager(quotes_DB)
-    
-    #Search Option
+    author = ' '.join(args.author)
+    numQuotes = args.numQuotes
+
+    # Account for empty string
+    if author == '':
+        parser.print_help()
+
     else:
-        author = GetAuthor()
         quotes = GetQuote(author)
-        PrintQuotes(quotes, author)
-        SaveQuote(quotes_DB, quotes, author)
-    
-    print("Goodbye!")   
+        PrintQuotes(quotes, author, numQuotes)
+
+        if not args.quiet:
+            SaveQuote(quotes_DB, quotes, author)
+
+        print("Goodbye!")
+
     quotes_DB.close() # Close Database
 
 if __name__ == '__main__':

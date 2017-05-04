@@ -10,21 +10,28 @@ Will create a file in directory named .Quotes.db
 * [Shelve](https://docs.python.org/2/library/shelve.html)
 
 ## Usage
- ```
-./getquote.py AUTHOR
-```
-Returns 10 quotes from brainyquote.com that match author user provides
-Prompts user if they want to save any quotes into DataBase
+### getquote
+
+Script to retrieve quotes for a given author
 
 ```
-./getquote.py -d [or --database]
-``` 
-DataBase Manager for storing previously searched quotes
+./getquote.py AUTHOR [-n NUMQUOTES]
+
+positional arguments:
+  AUTHOR        Search for quotes from AUTHOR
+
+optional arguments:
+  -h, --help    show this help message
+  -n NUMQUOTES  Will print NUMQUOTES number of retrieved quotes (default 10)
+  -q, --quiet   set to ignore saving quotes to DB
+```
+### database
+
+Script to interact with stored database of quotes
 
 ```
-./getquote.py -h [or --help]
+./database.py
 ```
-Displays the different usages 
 
 ## License
 MIT license, see License

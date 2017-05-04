@@ -72,7 +72,8 @@ def SearchQuote(quotes_DB):
             break
 
 #4. Database Management
-def DataBaseManager(quotes_DB):
+def Main():
+    quotes_DB=shelve.open('.Quotes.db')
     flag = True
     
     while flag:
@@ -112,3 +113,8 @@ def DataBaseManager(quotes_DB):
         
         except ValueError:
             print('Enter in a number silly!')
+
+    quotes_DB.close()
+
+if __name__ == '__main__':
+    Main()
