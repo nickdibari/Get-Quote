@@ -14,8 +14,6 @@ import shelve # Database Management
 import argparse # Command line argument parsing
 from datetime import datetime # Date/Time Information
 
-from database import DataBaseManager
-
 #1. Arg Parser Definition
 def ArgParser():
     parser = argparse.ArgumentParser(prog='./getquote',
@@ -110,13 +108,14 @@ def Main():
     # Account for empty string
     if author == '':
         parser.print_help()
-        exit(0)
 
-    quotes = GetQuote(author)
-    PrintQuotes(quotes, author, numQuotes)
-    SaveQuote(quotes_DB, quotes, author)
+    else:
+        quotes = GetQuote(author)
+        PrintQuotes(quotes, author, numQuotes)
+        SaveQuote(quotes_DB, quotes, author)
 
-    print("Goodbye!")
+        print("Goodbye!")
+
     quotes_DB.close() # Close Database
 
 if __name__ == '__main__':
