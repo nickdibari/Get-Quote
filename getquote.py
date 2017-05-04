@@ -47,7 +47,7 @@ def GetQuote(author):
     response.raise_for_status()  # Check to ensure page was downloaded OK
 
     # Create Beautiful Soup object to parse
-    QuoteObject = bs4.BeautifulSoup(response.text, "html.parser")
+    QuoteObject = bs4.BeautifulSoup(response.text, 'html.parser')
 
     # Parse Beautiful Soup object for quote
     quotes = QuoteObject.select('#quotesList a')
@@ -63,13 +63,12 @@ def PrintQuotes(quotes, author, numQuotes):
     if numQuotes > len(quotes):
         numQuotes = len(quotes)
 
-    # Print all quotes retrievd
-    print(" ")
-    print("Found the following matches for " + author + ":")
-    print("-----------------------------------------------")
+    print('Found the following matches for {}'.format(author))
+    print('-' * 45)
+
     for i in range(numQuotes):
-        print(str(i) + ". " + quotes[i].getText())
-        print(' ')
+        print('{0}. {1}'.format(str(i), quotes[i].getText()))
+        print('-' * 45)
 
 
 def SaveQuote(quotes_DB, quotes, author):
@@ -124,7 +123,7 @@ def Main():
         if not args.quiet:
             SaveQuote(quotes_DB, quotes, author)
 
-        print("Goodbye!")
+        print('Goodbye!')
 
     quotes_DB.close()  # Close Database
 
