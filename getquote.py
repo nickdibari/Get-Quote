@@ -16,25 +16,21 @@ from datetime import datetime # Date/Time Information
 
 from database import DataBaseManager
 
-### Arg Parser Definition
+#1. Arg Parser Definition
 def ArgParser():
     parser = argparse.ArgumentParser(prog='./getquote', usage='%(prog)s AUTHOR [options]',
                                      description='The easy to use Quote Finder')
 
-    parser.add_argument('author', metavar='AUTHOR', action='store', help='Search for quotes from AUTHOR')
+    parser.add_argument('author', metavar='AUTHOR', nargs='*', help='Search for quotes from AUTHOR')
     parser.add_argument('-n', action='store', type=int, default=10, dest='numQuotes', help='Will print N number of retrieved quotes (default 10)')
 
     return parser
 
-#1. Get name of author to search for
-def GetAuthor():
-    author = ' '.join(sys.argv[1:])
-    print("Searching for " + author + "...")
-    return author
-
 #2. Get Quote
 def GetQuote(author):
     results = []
+
+    print('Searching for {}...'.format(author))
 
     #Open website with requests 
     HTML = requests.get('http://brainyquote.com/search_results.html?q=' + author )
@@ -52,19 +48,14 @@ def GetQuote(author):
 
     return results
 
-
-
 #3. Print Quote
-def PrintQuotes(quotes, author):
-    #Get number of quotes to print. I didn't want to print all of the quotes, so I set the max allowed to print
-    #to 10
-    num_quotes = min(10, len(quotes))
+def PrintQuotes(quotes, author, numQuotes):
 
     #Print all quotes retrievd
     print(" ")
     print("Found the following matches for " + author + ":")
     print("-----------------------------------------------")
-    for i in range(num_quotes):
+    for i in range(numQuotes):
         print(str(i) + ". " + quotes[i].getText())
         print(' ')
 
@@ -99,26 +90,20 @@ def SaveQuote(quotes_DB, quotes, author):
     
 #Main Function
 def Main():
-    #quotes_DB=shelve.open('.Quotes.db')
+    quotes_DB=shelve.open('.Quotes.db')
 
     parser = ArgParser()
     args = parser.parse_args(sys.argv[1:])
     
-    print(args)
-    '''
-    #Database Management
-    if args.DB:
-        DataBaseManager(quotes_DB)
-    
-    #Search Option
-    else:
-        author = GetAuthor()
-        quotes = GetQuote(author)
-        PrintQuotes(quotes, author)
-        SaveQuote(quotes_DB, quotes, author)
-    '''
+    author = ' '.join(args.author)
+    numQuotes = args.numQuotes
+
+    quotes = GetQuote(author)
+    PrintQuotes(quotes, author, numQuotes)
+    SaveQuote(quotes_DB, quotes, author)
+
     print("Goodbye!")
-    #quotes_DB.close() # Close Database
+    quotes_DB.close() # Close Database
 
 if __name__ == '__main__':
     Main()
