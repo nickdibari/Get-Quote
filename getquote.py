@@ -18,11 +18,17 @@ from database import DataBaseManager
 
 #1. Arg Parser Definition
 def ArgParser():
-    parser = argparse.ArgumentParser(prog='./getquote', usage='%(prog)s AUTHOR [options]',
+    parser = argparse.ArgumentParser(prog='./getquote',
+                                     usage='%(prog)s AUTHOR [options]',
                                      description='The easy to use Quote Finder')
 
-    parser.add_argument('author', metavar='AUTHOR', nargs='*', help='Search for quotes from AUTHOR')
-    parser.add_argument('-n', action='store', type=int, default=10, dest='numQuotes', help='Will print N number of retrieved quotes (default 10)')
+    parser.add_argument('author', metavar='AUTHOR', nargs='*',
+                        help='Search for quotes from AUTHOR')
+
+    parser.add_argument('-n', action='store', type=int, default=10,
+                        dest='numQuotes',
+                        help='Will print NUMQUOTES number of retrieved quotes\
+                             (default 10)')
 
     return parser
 
@@ -100,6 +106,11 @@ def Main():
     
     author = ' '.join(args.author)
     numQuotes = args.numQuotes
+
+    # Account for empty string
+    if author == '':
+        parser.print_help()
+        exit(0)
 
     quotes = GetQuote(author)
     PrintQuotes(quotes, author, numQuotes)
