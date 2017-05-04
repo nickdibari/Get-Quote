@@ -25,8 +25,11 @@ def ArgParser():
 
     parser.add_argument('-n', action='store', type=int, default=10,
                         dest='numQuotes',
-                        help='Will print NUMQUOTES number of retrieved quotes\
+                        help='will print NUMQUOTES number of retrieved quotes\
                              (default 10)')
+
+    parser.add_argument('-q', '--quiet', action='store_true', default=False,
+                        dest='quiet', help='set to ignore saving quotes to DB')
 
     return parser
 
@@ -112,7 +115,9 @@ def Main():
     else:
         quotes = GetQuote(author)
         PrintQuotes(quotes, author, numQuotes)
-        SaveQuote(quotes_DB, quotes, author)
+
+        if not args.quiet:
+            SaveQuote(quotes_DB, quotes, author)
 
         print("Goodbye!")
 

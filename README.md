@@ -23,6 +23,7 @@ positional arguments:
 optional arguments:
   -h, --help    show this help message
   -n NUMQUOTES  Will print NUMQUOTES number of retrieved quotes (default 10)
+  -q, --quiet   set to ignore saving quotes to DB
 ```
 ### database
 
