@@ -51,6 +51,9 @@ def GetQuote(author):
 #3. Print Quote
 def PrintQuotes(quotes, author, numQuotes):
 
+    if numQuotes > len(quotes):
+        numQuotes = len(quotes)
+
     #Print all quotes retrievd
     print(" ")
     print("Found the following matches for " + author + ":")
