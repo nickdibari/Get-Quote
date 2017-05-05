@@ -93,7 +93,7 @@ def SaveQuote(quotes_DB, quotes, author):
                 else:
                     DateTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     Author_to_Add = '{0} {1}'.format(author, DateTime)
-                    Quote_to_Add = str(quotes[choice].getText())
+                    Quote_to_Add = quotes[choice].getText()
                     quotes_DB[Author_to_Add] = Quote_to_Add
 
                     print('Saved the quote you picked by {}. Good choice'
