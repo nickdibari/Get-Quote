@@ -125,7 +125,7 @@ def Main():
 
         print('Goodbye!')
 
-    quotes_DB.close()  # Close Database
+    quotes_DB.close()
 
 
 if __name__ == '__main__':
