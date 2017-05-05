@@ -21,6 +21,8 @@ def DeleteQuote(quotes_DB):
     userDict = {}
     dbKeys = list(quotes_DB.keys())
 
+    # Creates a dict of quoteDB keys as values with easier to enter
+    # keys mapped to them
     for i in range(len(dbKeys)):
         userDict[str(i)] = dbKeys[i]
 
