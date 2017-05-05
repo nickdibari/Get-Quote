@@ -18,26 +18,41 @@ def PrintDB(quotes_DB):
 
 
 def DeleteQuote(quotes_DB):
-    for key in quotes_DB.keys():
-        print(key)
+    userDict = {}
+    dbKeys = list(quotes_DB.keys())
 
-    choice = input('Please select the title of the quote to delete: ')
+    # Creates a dict of quoteDB keys as values with easier to enter
+    # keys mapped to them
+    for i in range(len(dbKeys)):
+        userDict[str(i)] = dbKeys[i]
 
-    while choice not in list(quotes_DB.keys()):
+    userKeys = [int(x) for x in list(userDict.keys())]
+    userKeys.sort()
+
+    print('Num | Author/Datetime Stamp')
+    print('-' * 45)
+    for key in userKeys:
+        title = userDict.get(str(key))
+        print('{0}: {1}'.format(key, title))
+
+    choice = input('Please select the number of the quote to delete: ')
+
+    while choice not in userDict.keys():
         choice = input('Input not found.\
-                       Please enter the title of the quote to delete: ')
+                       Please enter the number of the quote to delete: ')
 
     # Get quote to delete
-    quote = quotes_DB.get(choice)
+    quoteKey = userDict.get(choice)
+    quote = quotes_DB.get(quoteKey)
 
     # Print quote to delete
-    print(choice + ': ')
+    print('{}: '.format(quoteKey))
     print(quote)
     print('-' * 45)
-    confirm = input('Are you sure you want to do delete this quote (y/n): ')
+    confirm = input('Are you sure you want to delete this quote (y/n): ')
 
     if confirm == 'y' or confirm == 'Y':
-        del quotes_DB[choice]
+        del quotes_DB[quoteKey]
         print('Deleted\n')
 
 
