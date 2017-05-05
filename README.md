@@ -15,7 +15,7 @@ Will create a file in directory named .Quotes.db
 Script to retrieve quotes for a given author
 
 ```
-./getquote.py AUTHOR [-n NUMQUOTES] [-q or --quiet] [-h or --help]
+./getquote.py AUTHOR [-n NUMQUOTES] [-q or --quiet]
 
 positional arguments:
   AUTHOR        Search for quotes from AUTHOR
