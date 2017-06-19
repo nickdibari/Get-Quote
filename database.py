@@ -95,6 +95,7 @@ def DumpQuotes(quotes_DB):
 
     print('Done! Your quotes can be found in {}'.format(fileName))
 
+
 def Main():
     quotes_DB = shelve.open('.Quotes.db')
     flag = True
