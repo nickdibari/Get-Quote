@@ -85,6 +85,9 @@ def SearchQuote(quotes_DB):
 def DumpQuotes(quotes_DB):
     fileName = input('Please enter the filename to save the quotes to: ')
 
+    if '.txt' not in fileName:
+        fileName += '.txt'
+
     with open(fileName, 'w') as f:
         for key, value in quotes_DB.items():
             f.write('{0}: {1}\n'.format(key, value))
