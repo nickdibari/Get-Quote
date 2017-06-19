@@ -7,7 +7,7 @@
 # * DataBase Management                           * #
 # * --------------------------------------------- * #
 
-import shelve  # DataBase Management
+import shelve
 
 
 def PrintDB(quotes_DB):
