@@ -82,6 +82,16 @@ def SearchQuote(quotes_DB):
             break
 
 
+def DumpQuotes(quotes_DB):
+    fileName = input('Please enter the filename to save the quotes to: ')
+
+    with open(fileName, 'w') as f:
+        for key, value in quotes_DB.items():
+            f.write('{0}: {1}\n'.format(key, value))
+            f.write('-' * 90 + '\n')
+
+    print('Done! Your quotes can be found in {}'.format(fileName))
+
 def Main():
     quotes_DB = shelve.open('.Quotes.db')
     flag = True
@@ -91,14 +101,15 @@ def Main():
         print('1. Print all Quotes')
         print('2. Delete a Quote')
         print('3. Search for author')
-        print('4. [EXIT]')
+        print('4. Dump Database to text file')
+        print('5. [EXIT]')
         choice = input('> ')
 
         try:
             choice = int(choice)
 
             # ERROR CHECK
-            if choice < 1 or choice > 4:
+            if choice < 1 or choice > 5:
                 print('Sorry that is not a valid choice. Try again')
 
             # PRINT QUOTES
@@ -113,8 +124,12 @@ def Main():
             elif choice == 3:
                 SearchQuote(quotes_DB)
 
-            # [EXIT]
+            # DUMP DATABASE
             elif choice == 4:
+                DumpQuotes(quotes_DB)
+
+            # [EXIT]
+            elif choice == 5:
                 flag = False
 
             # ERROR CHECK
