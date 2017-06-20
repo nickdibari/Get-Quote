@@ -1,3 +1,6 @@
-# Database File
+# Database Files
 .Quotes.db
 __pycache__/
+
+# Program Output Files
+*.txt
