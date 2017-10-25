@@ -112,11 +112,16 @@ def DeleteQuote(quotes_DB):
         print('Deleted\n')
 
 
-def SearchQuote(quotes_DB):
+def SearchQuote(quotes_DB, to_search=None):
     matches = []
+    flag = False
+
+    if to_search:
+        flag = True  # Account for search argument from command line
 
     while True:
-        to_search = input('Please enter an author to search for: ')
+        if not to_search:
+            to_search = input('Please enter an author to search for: ')
 
         for key in quotes_DB.keys():
             if to_search in key:
@@ -131,6 +136,9 @@ def SearchQuote(quotes_DB):
             for quote in matches:
                 print(quote)
                 print('-' * 45)
+
+        if flag:
+            break
 
         matches = []  # Reset list
         choice = input('Would you like you search again? (y/n): ')
@@ -210,6 +218,9 @@ def Main():
 
     elif args.print_db:
         PrintDB(quotes_DB)
+
+    elif args.author:
+        SearchQuote(quotes_DB, to_search=args.author)
 
     quotes_DB.close()
 
