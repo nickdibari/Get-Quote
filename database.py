@@ -13,6 +13,10 @@ import shelve
 
 
 def ArgParser():
+    """
+    Create parser for command line arguments
+    - Return an ArgumentParser object that will determine what function to run
+    """
     prog = './database.py'
     usage = '{} [-i --interactive] [-p --print] [-s --search <author>]\
             [-d --delete] [--dump <output file>]'
@@ -66,6 +70,9 @@ def ArgParser():
 
 
 def PrintDB(quotes_DB):
+    """
+    Print all quotes from the database
+    """
     for key, value in quotes_DB.items():
         print('{0} : '.format(key))
         print(value)
@@ -73,6 +80,10 @@ def PrintDB(quotes_DB):
 
 
 def DeleteQuote(quotes_DB):
+    """
+    Delete a specific quote from the database
+    TODO: Add option to send author name to function as kwarg
+    """
     userDict = {}
     dbKeys = list(quotes_DB.keys())
 
@@ -112,6 +123,10 @@ def DeleteQuote(quotes_DB):
 
 
 def SearchQuote(quotes_DB, to_search=None):
+    """
+    Search database for all quotes from an author
+    - to_search: Optional kwarg, used for command line interface
+    """
     matches = []
     flag = False
 
@@ -146,6 +161,10 @@ def SearchQuote(quotes_DB, to_search=None):
 
 
 def DumpQuotes(quotes_DB, fileName=None):
+    """
+    Save all quotes to a text file
+    fileName: Optional kwarg, used for command line interface
+    """
     if not fileName:
         fileName = input('Please enter the filename to save the quotes to: ')
 
@@ -161,6 +180,9 @@ def DumpQuotes(quotes_DB, fileName=None):
 
 
 def InterActiveMode(quotes_DB):
+    """
+    Loop to run the functionality in a shell-like mode
+    """
     flag = True
 
     while flag:
@@ -208,6 +230,11 @@ def InterActiveMode(quotes_DB):
 
 
 def Main():
+    """
+    Driver function for script
+    Determines to run interactive shell or to call specific function using
+    command line arguments
+    """
     quotes_DB = shelve.open('.Quotes.db')
 
     parser = ArgParser()
