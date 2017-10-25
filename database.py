@@ -14,7 +14,7 @@ import shelve
 
 def ArgParser():
     prog = './database.py'
-    usage = '{} [-i --interactive] [-p --print] [-s --search AUTHOR]\
+    usage = '{} [-i --interactive] [-p --print] [-s --search <author>]\
             [-d --delete] [--dump <output file>]'
     description = 'The Easy to use Database Manager'
 
@@ -58,10 +58,9 @@ def ArgParser():
         '--dump',
         action='store',
         type=str,
-        default='output.txt',
+        default='output_file',
         dest='output_file',
-        help='Save contents of your database to a text file.\
-              Default is output.txt')
+        help='Save contents of your database to a text file.')
 
     return parser
 
@@ -94,8 +93,8 @@ def DeleteQuote(quotes_DB):
     choice = input('Please select the number of the quote to delete: ')
 
     while choice not in userDict.keys():
-        choice = input('Input not found.\
-                       Please enter the number of the quote to delete: ')
+        print('Input not found.')
+        choice = input('Please select the number of the quote to delete: ')
 
     # Get quote to delete
     quoteKey = userDict.get(choice)
@@ -146,8 +145,9 @@ def SearchQuote(quotes_DB, to_search=None):
             break
 
 
-def DumpQuotes(quotes_DB):
-    fileName = input('Please enter the filename to save the quotes to: ')
+def DumpQuotes(quotes_DB, fileName=None):
+    if not fileName:
+        fileName = input('Please enter the filename to save the quotes to: ')
 
     if not fileName.endswith('.txt'):
         fileName += '.txt'
@@ -221,6 +221,12 @@ def Main():
 
     elif args.author:
         SearchQuote(quotes_DB, to_search=args.author)
+
+    elif args.delete:
+        DeleteQuote(quotes_DB)
+
+    elif args.output_file:
+        DumpQuotes(quotes_DB, fileName=args.output_file)
 
     quotes_DB.close()
 
