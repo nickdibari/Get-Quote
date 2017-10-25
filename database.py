@@ -14,29 +14,54 @@ import shelve
 
 def ArgParser():
     prog = './database.py'
-    usage = '{} [-p --print] [-s --search AUTHOR] [-d --delete]\
-            [--dump <output file>]'
+    usage = '{} [-i --interactive] [-p --print] [-s --search AUTHOR]\
+            [-d --delete] [--dump <output file>]'
     description = 'The Easy to use Database Manager'
 
     parser = argparse.ArgumentParser(prog=prog,
                                      usage=usage.format(prog),
                                      description=description)
 
-    parser.add_argument('-p', '--print', action='store_true', default=False,
-                        dest='print_db', help='Print all quotes from your\
-                        database')
+    parser.add_argument(
+        '-i', '--interactive',
+        action='store_true',
+        default=False,
+        dest='interactive_mode',
+        help='Open your database interface'
+    )
 
-    parser.add_argument('-s', '--search', action='store', type=str, default='',
-                        dest='author',
-                        help='Search your database for quotes matching author')
+    parser.add_argument(
+        '-p', '--print',
+        action='store_true',
+        default=False,
+        dest='print_db',
+        help='Print all quotes from your database'
+    )
 
-    parser.add_argument('-d', '--delete', action='store_true', default=False,
-                        dest='delete', help='Run delete interface to remove\
-                        quotes from your database')
+    parser.add_argument(
+        '-s', '--search',
+        action='store',
+        type=str,
+        default='',
+        dest='author',
+        help='Search your database for quotes matching author'
+    )
 
-    parser.add_argument('--dump', action='store', type=str, default='output.txt',
-                        dest='output_file', help='Save contents of your\
-                        database to a text file. Default is output.txt')
+    parser.add_argument(
+        '-d', '--delete',
+        action='store_true',
+        default=False,
+        dest='delete',
+        help='Run delete interface to remove quotes from your database')
+
+    parser.add_argument(
+        '--dump',
+        action='store',
+        type=str,
+        default='output.txt',
+        dest='output_file',
+        help='Save contents of your database to a text file.\
+              Default is output.txt')
 
     return parser
 
@@ -127,19 +152,9 @@ def DumpQuotes(quotes_DB):
     print('Done! Your quotes can be found in {}'.format(fileName))
 
 
-def Main():
-    quotes_DB = shelve.open('.Quotes.db')
-    parser = ArgParser()
-    args = parser.parse_args(sys.argv[1:])
+def InterActiveMode(quotes_DB):
+    flag = True
 
-    #author = ' '.join(args.author)
-    #numQuotes = args.numQuotes
-
-    # Account for empty string
-    #if author == '':
-    parser.print_help()
-
-    """
     while flag:
         print('Please enter a choice:')
         print('1. Print all Quotes')
@@ -182,7 +197,15 @@ def Main():
 
         except ValueError:
             print('Enter in a number silly!')
-    """
+
+
+def Main():
+    quotes_DB = shelve.open('.Quotes.db')
+
+    parser = ArgParser()
+    args = parser.parse_args(sys.argv[1:])
+
+    parser.print_help()
 
     quotes_DB.close()
 
