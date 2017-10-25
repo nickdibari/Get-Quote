@@ -58,7 +58,7 @@ def ArgParser():
         '--dump',
         action='store',
         type=str,
-        default='output_file',
+        default='',
         dest='output_file',
         help='Save contents of your database to a text file.')
 
@@ -227,6 +227,9 @@ def Main():
 
     elif args.output_file:
         DumpQuotes(quotes_DB, fileName=args.output_file)
+
+    else:
+        parser.print_help()
 
     quotes_DB.close()
 
