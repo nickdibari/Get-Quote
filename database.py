@@ -205,7 +205,8 @@ def Main():
     parser = ArgParser()
     args = parser.parse_args(sys.argv[1:])
 
-    parser.print_help()
+    if args.interactive_mode:
+        InterActiveMode(quotes_DB)
 
     quotes_DB.close()
 
