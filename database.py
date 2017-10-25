@@ -208,6 +208,9 @@ def Main():
     if args.interactive_mode:
         InterActiveMode(quotes_DB)
 
+    elif args.print_db:
+        PrintDB(quotes_DB)
+
     quotes_DB.close()
 
 
