@@ -22,9 +22,11 @@ def ArgParser():
             [-d --delete] [--dump <output file>]'
     description = 'The Easy to use Database Manager'
 
-    parser = argparse.ArgumentParser(prog=prog,
-                                     usage=usage.format(prog),
-                                     description=description)
+    parser = argparse.ArgumentParser(
+        prog=prog,
+        usage=usage.format(prog),
+        description=description
+    )
 
     parser.add_argument(
         '-i', '--interactive',
