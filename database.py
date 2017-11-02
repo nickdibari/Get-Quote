@@ -158,8 +158,11 @@ def SearchQuote(quotes_DB, to_search=None):
 
         matches = []  # Reset list
         choice = input('Would you like you search again? (y/n): ')
+
         if choice == 'n' or choice == 'N':
             break
+        else:
+            to_search = None
 
 
 def DumpQuotes(quotes_DB, fileName=None):
