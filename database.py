@@ -7,10 +7,74 @@
 # * DataBase Management                           * #
 # * --------------------------------------------- * #
 
+import argparse
+import sys
 import shelve
 
 
+def ArgParser():
+    """
+    Create parser for command line arguments
+    - Return an ArgumentParser object that will determine what function to run
+    """
+    prog = './database.py'
+    usage = '{} [-i --interactive] [-p --print] [-s --search <author>]\
+            [-d --delete] [--dump <output file>]'
+    description = 'The Easy to use Database Manager'
+
+    parser = argparse.ArgumentParser(
+        prog=prog,
+        usage=usage.format(prog),
+        description=description
+    )
+
+    parser.add_argument(
+        '-i', '--interactive',
+        action='store_true',
+        default=False,
+        dest='interactive_mode',
+        help='Open your database interface'
+    )
+
+    parser.add_argument(
+        '-p', '--print',
+        action='store_true',
+        default=False,
+        dest='print_db',
+        help='Print all quotes from your database'
+    )
+
+    parser.add_argument(
+        '-s', '--search',
+        action='store',
+        type=str,
+        default='',
+        dest='author',
+        help='Search your database for quotes matching author'
+    )
+
+    parser.add_argument(
+        '-d', '--delete',
+        action='store_true',
+        default=False,
+        dest='delete',
+        help='Run delete interface to remove quotes from your database')
+
+    parser.add_argument(
+        '--dump',
+        action='store',
+        type=str,
+        default='',
+        dest='output_file',
+        help='Save contents of your database to a text file.')
+
+    return parser
+
+
 def PrintDB(quotes_DB):
+    """
+    Print all quotes from the database
+    """
     for key, value in quotes_DB.items():
         print('{0} : '.format(key))
         print(value)
@@ -18,6 +82,10 @@ def PrintDB(quotes_DB):
 
 
 def DeleteQuote(quotes_DB):
+    """
+    Delete a specific quote from the database
+    TODO: Add option to send author name to function as kwarg
+    """
     userDict = {}
     dbKeys = list(quotes_DB.keys())
 
@@ -38,8 +106,8 @@ def DeleteQuote(quotes_DB):
     choice = input('Please select the number of the quote to delete: ')
 
     while choice not in userDict.keys():
-        choice = input('Input not found.\
-                       Please enter the number of the quote to delete: ')
+        print('Input not found.')
+        choice = input('Please select the number of the quote to delete: ')
 
     # Get quote to delete
     quoteKey = userDict.get(choice)
@@ -56,11 +124,20 @@ def DeleteQuote(quotes_DB):
         print('Deleted\n')
 
 
-def SearchQuote(quotes_DB):
+def SearchQuote(quotes_DB, to_search=None):
+    """
+    Search database for all quotes from an author
+    - to_search: Optional kwarg, used for command line interface
+    """
     matches = []
+    flag = False
+
+    if to_search:
+        flag = True  # Account for search argument from command line
 
     while True:
-        to_search = input('Please enter an author to search for: ')
+        if not to_search:
+            to_search = input('Please enter an author to search for: ')
 
         for key in quotes_DB.keys():
             if to_search in key:
@@ -76,14 +153,25 @@ def SearchQuote(quotes_DB):
                 print(quote)
                 print('-' * 45)
 
-        matches = []  # Reset list
-        choice = input('Would you like you search again? (y/n): ')
-        if choice == 'n' or choice == 'N':
+        if flag:
             break
 
+        matches = []  # Reset list
+        choice = input('Would you like you search again? (y/n): ')
 
-def DumpQuotes(quotes_DB):
-    fileName = input('Please enter the filename to save the quotes to: ')
+        if choice == 'n' or choice == 'N':
+            break
+        else:
+            to_search = None
+
+
+def DumpQuotes(quotes_DB, fileName=None):
+    """
+    Save all quotes to a text file
+    fileName: Optional kwarg, used for command line interface
+    """
+    if not fileName:
+        fileName = input('Please enter the filename to save the quotes to: ')
 
     if not fileName.endswith('.txt'):
         fileName += '.txt'
@@ -96,8 +184,10 @@ def DumpQuotes(quotes_DB):
     print('Done! Your quotes can be found in {}'.format(fileName))
 
 
-def Main():
-    quotes_DB = shelve.open('.Quotes.db')
+def InterActiveMode(quotes_DB):
+    """
+    Loop to run the functionality in a shell-like mode
+    """
     flag = True
 
     while flag:
@@ -142,6 +232,36 @@ def Main():
 
         except ValueError:
             print('Enter in a number silly!')
+
+
+def Main():
+    """
+    Driver function for script
+    Determines to run interactive shell or to call specific function using
+    command line arguments
+    """
+    quotes_DB = shelve.open('.Quotes.db')
+
+    parser = ArgParser()
+    args = parser.parse_args(sys.argv[1:])
+
+    if args.interactive_mode:
+        InterActiveMode(quotes_DB)
+
+    elif args.print_db:
+        PrintDB(quotes_DB)
+
+    elif args.author:
+        SearchQuote(quotes_DB, to_search=args.author)
+
+    elif args.delete:
+        DeleteQuote(quotes_DB)
+
+    elif args.output_file:
+        DumpQuotes(quotes_DB, fileName=args.output_file)
+
+    else:
+        parser.print_help()
 
     quotes_DB.close()
 
