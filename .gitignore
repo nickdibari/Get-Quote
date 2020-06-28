@@ -4,3 +4,5 @@ __pycache__/
 
 # Program Output Files
 *.txt
+.idea/
+venv/
