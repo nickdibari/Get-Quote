@@ -15,15 +15,15 @@ Will create a file in directory named .Quotes.db
 Script to retrieve quotes for a given author
 
 ```
-./getquote.py AUTHOR [-n NUMQUOTES] [-q or --quiet]
+./getquote.py AUTHOR [options]
 
 positional arguments:
-  AUTHOR        Search for quotes from AUTHOR
+  AUTHOR         Search for quotes from AUTHOR
 
 optional arguments:
-  -h, --help    show this help message
-  -n NUMQUOTES  will print NUMQUOTES number of retrieved quotes (default 10)
-  -q, --quiet   set to ignore saving quotes to DB
+  -h, --help     show this help message and exit
+  -n NUM_QUOTES  Number of quotes to retrieve (default 10)
+  --print        Set to just print quotes retrieved to console
 ```
 ### database
 
