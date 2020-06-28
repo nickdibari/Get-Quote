@@ -42,8 +42,7 @@ def GetQuote(author):
     print('Searching for {}...'.format(author))
 
     # Open website with requests
-    response = requests.get('http://brainyquote.com/search_results.html?q={}'
-                            .format(author))
+    response = requests.get('https://brainyquote.com/search_results?q={}'.format(author))
     response.raise_for_status()  # Check to ensure page was downloaded OK
 
     # Create Beautiful Soup object to parse
