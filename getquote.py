@@ -1,42 +1,58 @@
 #! /usr/bin/python3
 
-# * GetQuote.py                                   * #
+# * get_quotes.py                                   * #
 # * Nicholas DiBari                               * #
 # * --------------------------------------------- * #
 # * Prints quote from brainyquote.com from author * #
 # * that user provides                            * #
 # * --------------------------------------------- * #
 
-import sys  # Get argument
-import requests  # Get HTML
-import bs4  # Parsing HTML
-import shelve  # Database Management
 import argparse  # Command line argument parsing
+import sys  # Get argument
+import shelve  # Database Management
 from datetime import datetime  # Date/Time Information
 
+import requests  # Get HTML
+import bs4  # Parsing HTM
 
-def ArgParser():
+
+def parse_args():
     description = 'The Easy to use Quote Search'
 
-    parser = argparse.ArgumentParser(prog='./getquote.py',
-                                     usage='%(prog)s AUTHOR [options]',
-                                     description=description)
+    parser = argparse.ArgumentParser(
+        prog='./getquote.py',
+        usage='%(prog)s AUTHOR [options]',
+        description=description
+    )
 
-    parser.add_argument('author', metavar='AUTHOR', nargs='*',
-                        help='Search for quotes from AUTHOR')
+    parser.add_argument(
+        'author',
+        metavar='AUTHOR',
+        nargs='*',
+        help='Search for quotes from AUTHOR'
+    )
 
-    parser.add_argument('-n', action='store', type=int, default=10,
-                        dest='numQuotes',
-                        help='will print NUMQUOTES number of retrieved quotes\
-                             (default 10)')
+    parser.add_argument(
+        '-n',
+        action='store',
+        type=int,
+        default=10,
+        dest='num_quotes',
+        help='Number of quotes to retrieve (default %(default)s)'
+    )
 
-    parser.add_argument('-q', '--quiet', action='store_true', default=False,
-                        dest='quiet', help='set to ignore saving quotes to DB')
+    parser.add_argument(
+        '--print',
+        action='store_true',
+        default=False,
+        dest='print',
+        help='Set to just print quotes retrieved to console'
+    )
 
     return parser
 
 
-def GetQuote(author):
+def get_quotes(author, num_quotes):
     results = []
 
     print('Searching for {}...'.format(author))
@@ -46,31 +62,28 @@ def GetQuote(author):
     response.raise_for_status()  # Check to ensure page was downloaded OK
 
     # Create Beautiful Soup object to parse
-    QuoteObject = bs4.BeautifulSoup(response.text, 'html.parser')
+    soup = bs4.BeautifulSoup(response.text, 'html.parser')
 
     # Parse Beautiful Soup object for quote
-    quotes = QuoteObject.select('#quotesList a')
+    quotes = soup.select('#quotesList a')
 
     for quote in quotes:
-        if quote.get('title') == 'view quote':
+        if quote.get('title') == 'view quote' and len(results) < num_quotes:
             results.append(quote)
 
     return results
 
 
-def PrintQuotes(quotes, author, numQuotes):
-    if numQuotes > len(quotes):
-        numQuotes = len(quotes)
-
+def print_quotes(quotes, author):
     print('Found the following matches for {}'.format(author))
     print('-' * 45)
 
-    for i in range(numQuotes):
-        print('{0}. {1}'.format(str(i), quotes[i].getText()))
+    for idx, quote in enumerate(quotes):
+        print('{}. {}'.format(idx, quote.getText()))
         print('-' * 45)
 
 
-def SaveQuote(quotes_DB, quotes, author):
+def save_quotes(quotes_db, quotes, author):
     while True:
         choice = input('Please pick a quote to save (or enter done to exit): ')
 
@@ -84,48 +97,43 @@ def SaveQuote(quotes_DB, quotes, author):
 
                 # CASE 2 [INPUT ERROR]. Check that number is in range
                 if choice < 0 or choice > len(quotes):
-                    print('That is an invalid input.\
-                          Please enter a number between 0 and {}'
-                          .format(len(quotes)))
+                    print('That is an invalid input. Please enter a number between 0 and {}'.format(len(quotes)))
 
                 # CASE 3 [BASE CASE]. Add selected quote to database
                 else:
-                    DateTime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    Author_to_Add = '{0} {1}'.format(author, DateTime)
-                    Quote_to_Add = quotes[choice].getText()
-                    quotes_DB[Author_to_Add] = Quote_to_Add
+                    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    db_key = '{} {}'.format(author, timestamp)
+                    quote = quotes[choice].getText()
+                    quotes_db[db_key] = quote
 
-                    print('Saved the quote you picked by {}. Good choice'
-                          .format(author))
+                    print('Saved the quote you picked by {}. Good choice!'.format(author))
 
             except ValueError:
                 print('Enter in a number silly!')
 
 
-def Main():
-    quotes_DB = shelve.open('.Quotes.db')
+def main():
+    quotes_db = shelve.open('.Quotes.db')
 
-    parser = ArgParser()
+    parser = parse_args()
     args = parser.parse_args(sys.argv[1:])
 
     author = ' '.join(args.author)
-    numQuotes = args.numQuotes
+    num_quotes = args.num_quotes
 
     # Account for empty string
     if author == '':
         parser.print_help()
 
     else:
-        quotes = GetQuote(author)
-        PrintQuotes(quotes, author, numQuotes)
+        quotes = get_quotes(author, num_quotes)
+        print_quotes(quotes, author)
 
-        if not args.quiet:
-            SaveQuote(quotes_DB, quotes, author)
+        if not args.print:
+            save_quotes(quotes_db, quotes, author)
 
-        print('Goodbye!')
-
-    quotes_DB.close()
+    quotes_db.close()
 
 
 if __name__ == '__main__':
-    Main()
+    main()
