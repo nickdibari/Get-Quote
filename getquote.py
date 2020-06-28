@@ -16,7 +16,7 @@ import requests  # Get HTML
 import bs4  # Parsing HTM
 
 
-def parse_args():
+def create_arg_parser():
     description = 'The Easy to use Quote Search'
 
     parser = argparse.ArgumentParser(
@@ -115,7 +115,7 @@ def save_quotes(quotes_db, quotes, author):
 def main():
     quotes_db = shelve.open('.Quotes.db')
 
-    parser = parse_args()
+    parser = create_arg_parser()
     args = parser.parse_args(sys.argv[1:])
 
     author = ' '.join(args.author)
