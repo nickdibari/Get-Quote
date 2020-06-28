@@ -80,12 +80,14 @@ def print_quotes(quotes_db):
     """
     Print all quotes from the database
     """
+    if not quotes_db.items():
+        print('Your database is empty!')
+        return
+
     for key, value in quotes_db.items():
         print('{}: '.format(key))
         print(value)
         print('-' * 45)
-    else:
-        print('Your database is empty!')
 
 
 def delete_quotes(quotes_db):
