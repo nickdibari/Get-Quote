@@ -3,7 +3,8 @@
 ## Overview
 Python program to scrape brainyquote.com for quotes from a user entered author. Also contains a DataBase feature to store and search for previously viewed quotes
 
-Will create a file in directory named .Quotes.db
+Will create a file in the current directory for storing saved quotes. This will be set to the value of the
+`DB_NAME` variable defined in the `settings.py` file.
 
 ## Requirements
 * [BeautifulSoup4](https://pypi.python.org/pypi/beautifulsoup4)

@@ -9,7 +9,9 @@
 
 import argparse
 import sys
-import shelve
+
+import settings
+from utils import connect_db
 
 
 def create_arg_parser():
@@ -249,7 +251,7 @@ def main():
     Determines to run interactive shell or to call specific function using
     command line arguments
     """
-    quotes_db = shelve.open('.Quotes.db')
+    quotes_db = connect_db(settings.DB_NAME)
 
     parser = create_arg_parser()
     args = parser.parse_args(sys.argv[1:])

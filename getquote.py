@@ -9,11 +9,13 @@
 
 import argparse  # Command line argument parsing
 import sys  # Get argument
-import shelve  # Database Management
 from datetime import datetime  # Date/Time Information
 
 import requests  # Get HTML
 import bs4  # Parsing HTM
+
+import settings
+from utils import connect_db
 
 
 def create_arg_parser():
@@ -113,7 +115,7 @@ def save_quotes(quotes_db, quotes, author):
 
 
 def main():
-    quotes_db = shelve.open('.Quotes.db')
+    quotes_db = connect_db(settings.DB_NAME)
 
     parser = create_arg_parser()
     args = parser.parse_args(sys.argv[1:])
