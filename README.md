@@ -30,7 +30,17 @@ optional arguments:
 Interactive script to interact with stored database of quotes
 
 ```
-./database.py
+./database.py [-i --interactive] [-p --print] [-s --search <author>] [-d --delete] [--dump <output file>]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i, --interactive     Open your database interface
+  -p, --print           Print all quotes from your database
+  -s AUTHOR, --search AUTHOR
+                        Search your database for quotes matching author
+  -d, --delete          Run delete interface to remove quotes from your
+                        database
+  --dump OUTPUT_FILE    Save contents of your database to a text file.
 ```
 
 ## License
