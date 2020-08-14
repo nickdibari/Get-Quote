@@ -115,7 +115,7 @@ def search_quotes(db_client, to_search=None):
     """
     Search database for all quotes from an author and write them to the console
 
-    :param db_client: (shelve.DbfilenameShelf) Connection to shelve database file
+    :param db_client: (DBClient) Connection to database
     :param to_search: Name of author to search database for matching quotes
     """
     flag = False
@@ -154,7 +154,7 @@ def dump_quotes(db_client, file_name=None):
     """
     Write all quotes in the database to a text file
 
-    :param db_client: (shelve.DbfilenameShelf) Connection to shelve database file
+    :param db_client: (DBClient) Connection to database
     :param file_name: (str) Name of file to write data
     """
     if not file_name:
