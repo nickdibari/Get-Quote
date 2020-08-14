@@ -11,7 +11,7 @@ import argparse
 import sys
 
 import settings
-from utils import connect_db
+from utils import DBClient
 
 
 def create_arg_parser():
@@ -80,13 +80,14 @@ def print_quotes(quotes_db):
     """
     Print all quotes from the database
     """
-    if not quotes_db.items():
+    quotes = quotes_db.get_all_quotes()
+
+    if not quotes:
         print('Your database is empty!')
         return
 
-    for key, value in quotes_db.items():
-        print('{}: '.format(key))
-        print(value)
+    for quote in quotes:
+        print('{}: {} | {} | {}'.format(quote.id, quote.author, quote.quote, quote.created_at))
         print('-' * 45)
 
 
@@ -95,42 +96,19 @@ def delete_quotes(quotes_db):
     Delete a specific quote from the database
     TODO: Add option to send author name to function as kwarg
     """
-    user_dict = {}
-    db_keys = list(quotes_db.keys())
-
-    # Creates a dict of quoteDB keys as values with easier to enter
-    # keys mapped to them
-    for i in range(len(db_keys)):
-        user_dict[str(i)] = db_keys[i]
-
-    user_keys = [int(x) for x in list(user_dict.keys())]
-    user_keys.sort()
+    quotes = quotes_db.get_all_quotes()
 
     print('Num | Author')
     print('-' * 45)
-    for key in user_keys:
-        title = user_dict.get(str(key))
-        print('{}: {}'.format(key, title))
+    for quote in quotes:
+        print('{}: {}'.format(quote.id, quote.author))
 
     choice = input('Please select the number of the quote to delete: ')
-
-    while choice not in user_dict.keys():
-        print('Input not found')
-        choice = input('Please select the number of the quote to delete: ')
-
-    # Get quote to delete
-    quote_key = user_dict.get(choice)
-    quote = quotes_db.get(quote_key)
-
-    # Print quote to delete
-    print('{}: '.format(quote_key))
-    print(quote)
-    print('-' * 45)
     confirm = input('Are you sure you want to delete this quote (y/n): ')
 
     if confirm.lower() == 'y':
-        del quotes_db[quote_key]
-        print('Deleted quote {}'.format(quote_key))
+        quotes_db.delete_quote_from_database(choice)
+        print('Deleted quote {}'.format(choice))
 
 
 def search_quotes(quotes_db, to_search=None):
@@ -140,7 +118,6 @@ def search_quotes(quotes_db, to_search=None):
     :param quotes_db: (shelve.DbfilenameShelf) Connection to shelve database file
     :param to_search: Name of author to search database for matching quotes
     """
-    matches = []
     flag = False
 
     if to_search:
@@ -150,24 +127,21 @@ def search_quotes(quotes_db, to_search=None):
         if not to_search:
             to_search = input('Please enter an author to search for: ')
 
-        for key in quotes_db.keys():
-            if to_search in key:
-                matches.append(quotes_db[key])
+        quotes = quotes_db.get_quotes_for_author(to_search)
 
-        if not matches:
+        if not quotes:
             print('Sorry, did not find {} in the database.'.format(to_search))
 
         else:
             print('Found the following quotes by {}'.format(to_search))
             print('-' * 45)
-            for quote in matches:
-                print(quote)
+            for quote in quotes:
+                print('{}: {} | {} | {}'.format(quote.id, quote.author, quote.quote, quote.created_at))
                 print('-' * 45)
 
         if flag:
             break
 
-        matches = []  # Reset list
         choice = input('Would you like you search again? (y/n): ')
 
         if choice.lower() == 'n':
@@ -190,8 +164,8 @@ def dump_quotes(quotes_db, file_name=None):
         file_name += '.txt'
 
     with open(file_name, 'w') as f:
-        for key, value in quotes_db.items():
-            f.write('{0}: {1}\n'.format(key, value))
+        for quote in quotes_db.get_all_quotes():
+            f.write('{0}: {1}\n'.format(quote.author, quote.quote))
             f.write('-' * 90 + '\n')
 
     print('Done! Your quotes can be found in {}'.format(file_name))
@@ -253,7 +227,7 @@ def main():
     Determines to run interactive shell or to call specific function using
     command line arguments
     """
-    quotes_db = connect_db(settings.DB_NAME)
+    quotes_db = DBClient(settings.DB_NAME)
 
     parser = create_arg_parser()
     args = parser.parse_args(sys.argv[1:])
@@ -276,7 +250,7 @@ def main():
     else:
         parser.print_help()
 
-    quotes_db.close()
+    quotes_db.close_connection()
 
 
 if __name__ == '__main__':

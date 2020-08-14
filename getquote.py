@@ -15,7 +15,7 @@ import requests  # Get HTML
 import bs4  # Parsing HTM
 
 import settings
-from utils import connect_db
+from utils import DBClient
 
 
 def create_arg_parser():
@@ -103,10 +103,9 @@ def save_quotes(quotes_db, quotes, author):
 
                 # CASE 3 [BASE CASE]. Add selected quote to database
                 else:
-                    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    db_key = '{} {}'.format(author, timestamp)
+                    created_at = datetime.now().isoformat()
                     quote = quotes[choice].getText()
-                    quotes_db[db_key] = quote
+                    quotes_db.insert_quote(author, quote, created_at)
 
                     print('Saved the quote you picked by {}. Good choice!'.format(author))
 
@@ -115,7 +114,7 @@ def save_quotes(quotes_db, quotes, author):
 
 
 def main():
-    quotes_db = connect_db(settings.DB_NAME)
+    quotes_db = DBClient(settings.DB_NAME)
 
     parser = create_arg_parser()
     args = parser.parse_args(sys.argv[1:])
@@ -134,7 +133,7 @@ def main():
         if not args.print:
             save_quotes(quotes_db, quotes, author)
 
-    quotes_db.close()
+    quotes_db.close_connection()
 
 
 if __name__ == '__main__':
