@@ -93,9 +93,9 @@ class DBClient(object):
             ret = self.conn.execute('''
                 SELECT *
                 FROM quotes
-                WHERE author=?
+                WHERE author LIKE ?
                 ORDER BY created_at DESC
-            ''', (author,))
+            ''', (f'%{author}%',))
 
         return self._build_quotes_from_query_result(ret.fetchall())
 
