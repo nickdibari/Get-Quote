@@ -30,6 +30,7 @@ class DBClient(object):
         with self.conn:
             self.conn.execute('''
                 CREATE TABLE IF NOT EXISTS quotes (
+                    id INTEGER PRIMARY KEY,
                     author TEXT,
                     quote TEXT,
                     created_at TEXT
@@ -52,5 +53,5 @@ class DBClient(object):
         """
         with self.conn:
             self.conn.execute('''
-                INSERT INTO quotes VALUES (?, ?, ?)
+                INSERT INTO quotes (author, quote, created_at) VALUES (?, ?, ?)
             ''', (author, quote, created_at))
