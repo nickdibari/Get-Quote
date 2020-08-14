@@ -86,8 +86,10 @@ def print_quotes(db_client):
         print('Your database is empty!')
         return
 
+    print('ID | Author | Quote | Created At |')
+
     for quote in quotes:
-        print('{}: {} | {} | {}'.format(quote.id, quote.author, quote.quote, quote.created_at))
+        print('{}  | {} | {} | {}'.format(quote.id, quote.author, quote.quote, quote.created_at))
         print('-' * 45)
 
 
