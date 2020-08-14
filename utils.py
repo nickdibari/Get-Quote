@@ -83,6 +83,7 @@ class DBClient(object):
                 SELECT *
                 FROM quotes
                 WHERE author=?
+                ORDER BY created_at DESC
             ''', (author,))
 
         # Build list of quote objects for return value
