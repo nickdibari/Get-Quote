@@ -85,7 +85,7 @@ def print_quotes(quotes, author):
         print('-' * 45)
 
 
-def save_quotes(quotes_db, quotes, author):
+def save_quotes(db_client, quotes, author):
     while True:
         choice = input('Please pick a quote to save (or enter done to exit): ')
 
@@ -105,7 +105,7 @@ def save_quotes(quotes_db, quotes, author):
                 else:
                     created_at = datetime.now().isoformat()
                     quote = quotes[choice].getText()
-                    quotes_db.insert_quote(author, quote, created_at)
+                    db_client.insert_quote(author, quote, created_at)
 
                     print('Saved the quote you picked by {}. Good choice!'.format(author))
 
@@ -114,7 +114,7 @@ def save_quotes(quotes_db, quotes, author):
 
 
 def main():
-    quotes_db = DBClient(settings.DB_NAME)
+    db_client = DBClient(settings.DB_NAME)
 
     parser = create_arg_parser()
     args = parser.parse_args(sys.argv[1:])
@@ -131,9 +131,9 @@ def main():
         print_quotes(quotes, author)
 
         if not args.print:
-            save_quotes(quotes_db, quotes, author)
+            save_quotes(db_client, quotes, author)
 
-    quotes_db.close_connection()
+    db_client.close_connection()
 
 
 if __name__ == '__main__':

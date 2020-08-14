@@ -76,11 +76,11 @@ def create_arg_parser():
     return parser
 
 
-def print_quotes(quotes_db):
+def print_quotes(db_client):
     """
     Print all quotes from the database
     """
-    quotes = quotes_db.get_all_quotes()
+    quotes = db_client.get_all_quotes()
 
     if not quotes:
         print('Your database is empty!')
@@ -91,12 +91,12 @@ def print_quotes(quotes_db):
         print('-' * 45)
 
 
-def delete_quotes(quotes_db):
+def delete_quotes(db_client):
     """
     Delete a specific quote from the database
     TODO: Add option to send author name to function as kwarg
     """
-    quotes = quotes_db.get_all_quotes()
+    quotes = db_client.get_all_quotes()
 
     print('Num | Author')
     print('-' * 45)
@@ -107,15 +107,15 @@ def delete_quotes(quotes_db):
     confirm = input('Are you sure you want to delete this quote (y/n): ')
 
     if confirm.lower() == 'y':
-        quotes_db.delete_quote_from_database(choice)
+        db_client.delete_quote_from_database(choice)
         print('Deleted quote {}'.format(choice))
 
 
-def search_quotes(quotes_db, to_search=None):
+def search_quotes(db_client, to_search=None):
     """
     Search database for all quotes from an author and write them to the console
 
-    :param quotes_db: (shelve.DbfilenameShelf) Connection to shelve database file
+    :param db_client: (shelve.DbfilenameShelf) Connection to shelve database file
     :param to_search: Name of author to search database for matching quotes
     """
     flag = False
@@ -127,7 +127,7 @@ def search_quotes(quotes_db, to_search=None):
         if not to_search:
             to_search = input('Please enter an author to search for: ')
 
-        quotes = quotes_db.get_quotes_for_author(to_search)
+        quotes = db_client.get_quotes_for_author(to_search)
 
         if not quotes:
             print('Sorry, did not find {} in the database.'.format(to_search))
@@ -150,11 +150,11 @@ def search_quotes(quotes_db, to_search=None):
             to_search = None
 
 
-def dump_quotes(quotes_db, file_name=None):
+def dump_quotes(db_client, file_name=None):
     """
     Write all quotes in the database to a text file
 
-    :param quotes_db: (shelve.DbfilenameShelf) Connection to shelve database file
+    :param db_client: (shelve.DbfilenameShelf) Connection to shelve database file
     :param file_name: (str) Name of file to write data
     """
     if not file_name:
@@ -164,14 +164,14 @@ def dump_quotes(quotes_db, file_name=None):
         file_name += '.txt'
 
     with open(file_name, 'w') as f:
-        for quote in quotes_db.get_all_quotes():
+        for quote in db_client.get_all_quotes():
             f.write('{0}: {1}\n'.format(quote.author, quote.quote))
             f.write('-' * 90 + '\n')
 
     print('Done! Your quotes can be found in {}'.format(file_name))
 
 
-def interactive_mode(quotes_db):
+def interactive_mode(db_client):
     """
     Loop to run the functionality in a shell-like mode
     """
@@ -195,19 +195,19 @@ def interactive_mode(quotes_db):
 
             # PRINT QUOTES
             elif choice == 1:
-                print_quotes(quotes_db)
+                print_quotes(db_client)
 
             # DELETE QUOTE
             elif choice == 2:
-                delete_quotes(quotes_db)
+                delete_quotes(db_client)
 
             # SEARCH QUOTE
             elif choice == 3:
-                search_quotes(quotes_db)
+                search_quotes(db_client)
 
             # DUMP DATABASE
             elif choice == 4:
-                dump_quotes(quotes_db)
+                dump_quotes(db_client)
 
             # [EXIT]
             elif choice == 5:
@@ -227,30 +227,30 @@ def main():
     Determines to run interactive shell or to call specific function using
     command line arguments
     """
-    quotes_db = DBClient(settings.DB_NAME)
+    db_client = DBClient(settings.DB_NAME)
 
     parser = create_arg_parser()
     args = parser.parse_args(sys.argv[1:])
 
     if args.interactive_mode:
-        interactive_mode(quotes_db)
+        interactive_mode(db_client)
 
     elif args.print_db:
-        print_quotes(quotes_db)
+        print_quotes(db_client)
 
     elif args.author:
-        search_quotes(quotes_db, to_search=args.author)
+        search_quotes(db_client, to_search=args.author)
 
     elif args.delete:
-        delete_quotes(quotes_db)
+        delete_quotes(db_client)
 
     elif args.output_file:
-        dump_quotes(quotes_db, file_name=args.output_file)
+        dump_quotes(db_client, file_name=args.output_file)
 
     else:
         parser.print_help()
 
-    quotes_db.close_connection()
+    db_client.close_connection()
 
 
 if __name__ == '__main__':
