@@ -34,6 +34,21 @@ class DBClient(object):
                 );
             ''')
 
+    def _build_quotes_from_query_result(self, rows: List[sqlite3.Row]) -> List[Quote]:
+        """
+        Build the list of quote objects returned by a query
+
+        :param rows: (list[sqlite3.Row]) Row objects returned from a query
+
+        :return: (list[Quote])
+        """
+        quotes = []
+
+        for row in rows:
+            quotes.append(Quote(row['id'], row['author'], row['quote'], row['created_at']))
+
+        return quotes
+
     def close_connection(self):
         """
         Close connection to the database
@@ -57,8 +72,6 @@ class DBClient(object):
         """
         Get all quotes in the database
         """
-        quotes = []
-
         with self.conn:
             ret = self.conn.execute('''
                 SELECT *
@@ -66,11 +79,7 @@ class DBClient(object):
                 ORDER BY created_at DESC
             ''')
 
-        # Build list of quote objects for return value
-        for row in ret.fetchall():
-            quotes.append(Quote(row['id'], row['author'], row['quote'], row['created_at']))
-
-        return quotes
+        return self._build_quotes_from_query_result(ret.fetchall())
 
     def get_quotes_for_author(self, author: str) -> List[Quote]:
         """
@@ -80,8 +89,6 @@ class DBClient(object):
 
         :return: (list[Quotes])
         """
-        quotes = []
-
         with self.conn:
             ret = self.conn.execute('''
                 SELECT *
@@ -90,11 +97,7 @@ class DBClient(object):
                 ORDER BY created_at DESC
             ''', (author,))
 
-        # Build list of quote objects for return value
-        for row in ret.fetchall():
-            quotes.append(Quote(row['id'], row['author'], row['quote'], row['created_at']))
-
-        return quotes
+        return self._build_quotes_from_query_result(ret.fetchall())
 
     def delete_quote_from_database(self, id: int):
         """
