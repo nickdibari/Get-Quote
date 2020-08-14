@@ -1,5 +1,6 @@
 import sqlite3
 import shelve
+from typing import List
 
 
 def connect_db(name):
@@ -16,11 +17,22 @@ def connect_db(name):
         raise Exception('Unable to connect to database with name {}'.format(name))
 
 
+class Quote(object):
+    """Represents a row in the quotes table"""
+
+    def __init__(self, id: int, author: str, quote: str, created_at: str):
+        self.id = id
+        self.author = author
+        self.quote = quote
+        self.created_at = created_at
+
+
 class DBClient(object):
     """Client for interacting with database for the application"""
 
     def __init__(self, database_name: str):
         self.conn = sqlite3.connect(database_name)
+        self.conn.row_factory = sqlite3.Row
         self._create_quotes_table()
 
     def _create_quotes_table(self):
@@ -55,3 +67,26 @@ class DBClient(object):
             self.conn.execute('''
                 INSERT INTO quotes (author, quote, created_at) VALUES (?, ?, ?)
             ''', (author, quote, created_at))
+
+    def get_quotes_for_author(self, author: str) -> List[Quote]:
+        """
+        Retrieve quotes from the database for the given author
+
+        :param author: (str) Name of author to retrieve quotes for
+
+        :return: (list[Quotes])
+        """
+        quotes = []
+
+        with self.conn:
+            ret = self.conn.execute('''
+                SELECT *
+                FROM quotes
+                WHERE author=?
+            ''', (author,))
+
+        # Build list of quote objects for return value
+        for row in ret.fetchall():
+            quotes.append(Quote(row['id'], row['author'], row['quote'], row['created_at']))
+
+        return quotes
