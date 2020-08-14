@@ -90,3 +90,15 @@ class DBClient(object):
             quotes.append(Quote(row['id'], row['author'], row['quote'], row['created_at']))
 
         return quotes
+
+    def delete_quote_from_database(self, id: int):
+        """
+        Delete a quote from the database for the given row
+
+        :param id: (int) Primary key of row to delete from database
+        """
+        with self.conn:
+            self.conn.execute('''
+                DELETE FROM quotes
+                WHERE id=?
+            ''', (id,))
