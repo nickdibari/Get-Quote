@@ -11,6 +11,9 @@ class Quote(object):
         self.quote = quote
         self.created_at = created_at
 
+    def __str__(self):
+        return f'{self.id}  | {self.author}  | {self.quote}  | {self.created_at}'
+
 
 class DBClient(object):
     """Client for interacting with database for the application"""

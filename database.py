@@ -89,7 +89,7 @@ def print_quotes(db_client):
     print('ID | Author | Quote | Created At |')
 
     for quote in quotes:
-        print('{}  | {} | {} | {}'.format(quote.id, quote.author, quote.quote, quote.created_at))
+        print(quote)
         print('-' * 45)
 
 
@@ -102,7 +102,7 @@ def delete_quotes(db_client):
 
     print('ID | Author | Quote')
     for quote in quotes:
-        print('{}  | {} | {}'.format(quote.id, quote.author, quote.quote))
+        print(quote)
 
     choice = input('Please select the number of the quote to delete: ')
     confirm = input('Are you sure you want to delete this quote (y/n): ')
@@ -137,7 +137,7 @@ def search_quotes(db_client, to_search=None):
             print('Found the following quotes by {}'.format(to_search))
             print('-' * 45)
             for quote in quotes:
-                print('{}: {} | {} | {}'.format(quote.id, quote.author, quote.quote, quote.created_at))
+                print(quote)
                 print('-' * 45)
 
         if flag:
