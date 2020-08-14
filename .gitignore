@@ -1,5 +1,5 @@
 # Database Files
-.Quotes.db
+*.db
 __pycache__/
 
 # Program Output Files
