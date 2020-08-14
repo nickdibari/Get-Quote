@@ -19,7 +19,7 @@ def connect_db(name):
 class DBClient(object):
     """Client for interacting with database for the application"""
 
-    def __init__(self, database_name):
+    def __init__(self, database_name: str):
         self.conn = sqlite3.connect(database_name)
         self._create_quotes_table()
 
@@ -30,10 +30,10 @@ class DBClient(object):
         with self.conn:
             self.conn.execute('''
                 CREATE TABLE IF NOT EXISTS quotes (
-                    author TEXT
-                    quote TEXT
+                    author TEXT,
+                    quote TEXT,
                     created_at TEXT
-                )
+                );
             ''')
 
     def close_connection(self):
@@ -41,3 +41,16 @@ class DBClient(object):
         Close connection to the database
         """
         self.conn.close()
+
+    def insert_quote(self, author: str, quote: str, created_at: str):
+        """
+        Insert a quote into the database
+
+        :param author: (str) Name of the author that said the quote
+        :param quote: (str) The quote for the author
+        :param created_at: (str) Timestamp for when the quote was saved to database
+        """
+        with self.conn:
+            self.conn.execute('''
+                INSERT INTO quotes VALUES (?, ?, ?)
+            ''', (author, quote, created_at))
