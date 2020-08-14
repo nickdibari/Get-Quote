@@ -68,6 +68,25 @@ class DBClient(object):
                 INSERT INTO quotes (author, quote, created_at) VALUES (?, ?, ?)
             ''', (author, quote, created_at))
 
+    def get_all_quotes(self) -> List[Quote]:
+        """
+        Get all quotes in the database
+        """
+        quotes = []
+
+        with self.conn:
+            ret = self.conn.execute('''
+                SELECT *
+                FROM quotes
+                ORDER BY created_at DESC
+            ''')
+
+        # Build list of quote objects for return value
+        for row in ret.fetchall():
+            quotes.append(Quote(row['id'], row['author'], row['quote'], row['created_at']))
+
+        return quotes
+
     def get_quotes_for_author(self, author: str) -> List[Quote]:
         """
         Retrieve quotes from the database for the given author
