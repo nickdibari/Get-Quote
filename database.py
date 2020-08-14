@@ -100,10 +100,9 @@ def delete_quotes(db_client):
     """
     quotes = db_client.get_all_quotes()
 
-    print('Num | Author')
-    print('-' * 45)
+    print('ID | Author | Quote')
     for quote in quotes:
-        print('{}: {}'.format(quote.id, quote.author))
+        print('{}  | {} | {}'.format(quote.id, quote.author, quote.quote))
 
     choice = input('Please select the number of the quote to delete: ')
     confirm = input('Are you sure you want to delete this quote (y/n): ')
