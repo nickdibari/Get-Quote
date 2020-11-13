@@ -8,6 +8,7 @@ Will create a file in the current directory for storing saved quotes. This will 
 
 ## Requirements
 * [BeautifulSoup4](https://pypi.python.org/pypi/beautifulsoup4)
+* [requests](https://pypi.org/project/requests/)
 * [Shelve](https://docs.python.org/2/library/shelve.html)
 
 ## Usage
