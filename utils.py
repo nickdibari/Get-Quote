@@ -1,4 +1,6 @@
+import os
 import sqlite3
+import sys
 from typing import List
 
 
@@ -19,16 +21,59 @@ class DBClient(object):
     """Client for interacting with database for the application"""
 
     def __init__(self, database_name: str):
-        self.conn = sqlite3.connect(database_name)
-        self.conn.row_factory = sqlite3.Row
-        self._create_quotes_table()
+        self.conn = self.__connect_to_database(database_name)
 
-    def _create_quotes_table(self):
+    def __connect_to_database(self, database_name: str) -> sqlite3.Connection:
+        """
+        Open a connection to the sqlite3 database specified by `database_name`.
+
+        :param database_name: (str) Name of sqlite3 database file to open
+
+        :return: (sqlite3.Connection)
+        """
+        conn = sqlite3.connect(database_name)
+        conn.row_factory = sqlite3.Row
+
+        try:
+            self.__create_quotes_table(conn)
+            return conn
+        except sqlite3.DatabaseError:
+            return self.__handle_invalid_database_file(database_name)
+
+    def __handle_invalid_database_file(self, database_name: str) -> sqlite3.Connection:
+        """
+        If the file specified by `database_name` is not a valid sqlite3 database, prompt
+        user to delete the file. If the user allows it, delete the file and create a new
+        sqlite3 database file. If the user rejects, exit with error code.
+
+        :param database_name: (str) Name of sqlite3 database file to open
+
+        :return: (sqlite3.Connection)
+        """
+        print(f'ERROR: {database_name} is not a sqlite3 file!')
+        delete_file = input('Would you like to delete the old file? (y/n): ')
+
+        if delete_file.lower() == 'y':
+            print(f'Deleting {database_name}...')
+            os.unlink(database_name)
+
+            print('Creating new database file...')
+            return self.__connect_to_database(database_name)
+        else:
+            print(
+                '\nERROR: Cannot continue with invalid database file.\n'
+                'Please delete or rename the file to continue.'
+            )
+            sys.exit(1)
+
+    def __create_quotes_table(self, conn: sqlite3.Connection):
         """
         Create the table used for storing quotes if it does not exist already
+
+        :param conn: (sqlite3.Connection) Connection to sqlite3 database file
         """
-        with self.conn:
-            self.conn.execute('''
+        with conn:
+            conn.execute('''
                 CREATE TABLE IF NOT EXISTS quotes (
                     id INTEGER PRIMARY KEY,
                     author TEXT,
