@@ -1,7 +1,7 @@
 import os
 import sqlite3
 import sys
-from typing import List
+from typing import List, Union
 
 
 class Quote(object):
@@ -22,6 +22,22 @@ class DBClient(object):
 
     def __init__(self, database_name: str):
         self.conn = self.__connect_to_database(database_name)
+
+    def __execute_query(self, conn: sqlite3.Connection, query: str, params: Union[None, tuple] = None):
+        """
+        Execute a SQL query using the instance connection to the database
+
+        :param conn: (sqlite3.Connection) Connection instance to the sqlite3 database
+        :param query: (str) SQL statement to execute
+        :param params: (None|tuple) Optional params to pass in query
+
+        :return: (sqlite3.Cursor)
+        """
+        if params is None:
+            params = ()
+
+        with conn:
+            return conn.execute(query, params)
 
     def __connect_to_database(self, database_name: str) -> sqlite3.Connection:
         """
@@ -72,15 +88,16 @@ class DBClient(object):
 
         :param conn: (sqlite3.Connection) Connection to sqlite3 database file
         """
-        with conn:
-            conn.execute('''
-                CREATE TABLE IF NOT EXISTS quotes (
-                    id INTEGER PRIMARY KEY,
-                    author TEXT,
-                    quote TEXT,
-                    created_at TEXT
-                );
-            ''')
+        query = '''
+            CREATE TABLE IF NOT EXISTS quotes (
+                id INTEGER PRIMARY KEY,
+                author TEXT,
+                quote TEXT,
+                created_at TEXT
+            );
+        '''
+
+        self.__execute_query(conn, query)
 
     def _build_quotes_from_query_result(self, rows: List[sqlite3.Row]) -> List[Quote]:
         """
@@ -111,21 +128,24 @@ class DBClient(object):
         :param quote: (str) The quote for the author
         :param created_at: (str) Timestamp for when the quote was saved to database
         """
-        with self.conn:
-            self.conn.execute('''
-                INSERT INTO quotes (author, quote, created_at) VALUES (?, ?, ?)
-            ''', (author, quote, created_at))
+        params = (author, quote, created_at)
+        query = 'INSERT INTO quotes (author, quote, created_at) VALUES (?, ?, ?)'
+
+        self.__execute_query(self.conn, query, params)
 
     def get_all_quotes(self) -> List[Quote]:
         """
         Get all quotes in the database
+
+        :return: (list[Quotes])
         """
-        with self.conn:
-            ret = self.conn.execute('''
-                SELECT *
-                FROM quotes
-                ORDER BY created_at DESC
-            ''')
+        query = '''
+            SELECT *
+            FROM quotes
+            ORDER BY created_at DESC
+        '''
+
+        ret = self.__execute_query(self.conn, query)
 
         return self._build_quotes_from_query_result(ret.fetchall())
 
@@ -137,13 +157,15 @@ class DBClient(object):
 
         :return: (list[Quotes])
         """
-        with self.conn:
-            ret = self.conn.execute('''
-                SELECT *
-                FROM quotes
-                WHERE author LIKE ?
-                ORDER BY created_at DESC
-            ''', (f'%{author}%',))
+        params = (f'%{author}%',)
+        query = '''
+            SELECT *
+            FROM quotes
+            WHERE author LIKE ?
+            ORDER BY created_at DESC
+        '''
+
+        ret = self.__execute_query(self.conn, query, params)
 
         return self._build_quotes_from_query_result(ret.fetchall())
 
@@ -153,8 +175,7 @@ class DBClient(object):
 
         :param id: (int) Primary key of row to delete from database
         """
-        with self.conn:
-            self.conn.execute('''
-                DELETE FROM quotes
-                WHERE id=?
-            ''', (id,))
+        params = (id,)
+        query = 'DELETE FROM quotes WHERE id=?'
+
+        self.__execute_query(self.conn, query, params)
