@@ -51,6 +51,7 @@ def create_arg_parser():
         action='store',
         type=str,
         default='',
+        nargs='*',
         dest='author',
         help='Search your database for quotes matching author'
     )
@@ -240,7 +241,8 @@ def main():
         print_quotes(db_client)
 
     elif args.author:
-        search_quotes(db_client, to_search=args.author)
+        author = ' '.join(args.author)
+        search_quotes(db_client, to_search=author)
 
     elif args.delete:
         delete_quotes(db_client)
