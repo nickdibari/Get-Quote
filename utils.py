@@ -22,12 +22,12 @@ class DBClient(object):
 
     def __init__(self, database_name: str):
         self.conn = self.__connect_to_database(database_name)
+        self.__set_up_database(database_name)
 
-    def __execute_query(self, conn: sqlite3.Connection, query: str, params: Union[None, tuple] = None):
+    def __execute_query(self, query: str, params: Union[None, tuple] = None) -> sqlite3.Cursor:
         """
         Execute a SQL query using the instance connection to the database
 
-        :param conn: (sqlite3.Connection) Connection instance to the sqlite3 database
         :param query: (str) SQL statement to execute
         :param params: (None|tuple) Optional params to pass in query
 
@@ -36,8 +36,8 @@ class DBClient(object):
         if params is None:
             params = ()
 
-        with conn:
-            return conn.execute(query, params)
+        with self.conn:
+            return self.conn.execute(query, params)
 
     def __connect_to_database(self, database_name: str) -> sqlite3.Connection:
         """
@@ -50,21 +50,21 @@ class DBClient(object):
         conn = sqlite3.connect(database_name)
         conn.row_factory = sqlite3.Row
 
-        try:
-            self.__create_quotes_table(conn)
-            return conn
-        except sqlite3.DatabaseError:
-            return self.__handle_invalid_database_file(database_name)
+        return conn
 
-    def __handle_invalid_database_file(self, database_name: str) -> sqlite3.Connection:
+    def __set_up_database(self, database_name: str) -> None:
+        try:
+            self.__create_quotes_table()
+        except sqlite3.DatabaseError:
+            self.__handle_invalid_database_file(database_name)
+
+    def __handle_invalid_database_file(self, database_name: str) -> None:
         """
         If the file specified by `database_name` is not a valid sqlite3 database, prompt
         user to delete the file. If the user allows it, delete the file and create a new
         sqlite3 database file. If the user rejects, exit with error code.
 
         :param database_name: (str) Name of sqlite3 database file to open
-
-        :return: (sqlite3.Connection)
         """
         print(f'ERROR: {database_name} is not a sqlite3 file!')
         delete_file = input('Would you like to delete the old file? (y/n): ')
@@ -74,7 +74,8 @@ class DBClient(object):
             os.unlink(database_name)
 
             print('Creating new database file...')
-            return self.__connect_to_database(database_name)
+            self.conn = self.__connect_to_database(database_name)
+            self.__set_up_database(database_name)
         else:
             print(
                 '\nERROR: Cannot continue with invalid database file.\n'
@@ -82,11 +83,9 @@ class DBClient(object):
             )
             sys.exit(1)
 
-    def __create_quotes_table(self, conn: sqlite3.Connection):
+    def __create_quotes_table(self) -> None:
         """
         Create the table used for storing quotes if it does not exist already
-
-        :param conn: (sqlite3.Connection) Connection to sqlite3 database file
         """
         query = '''
             CREATE TABLE IF NOT EXISTS quotes (
@@ -97,9 +96,9 @@ class DBClient(object):
             );
         '''
 
-        self.__execute_query(conn, query)
+        self.__execute_query(query)
 
-    def _build_quotes_from_query_result(self, rows: List[sqlite3.Row]) -> List[Quote]:
+    def __build_quotes_from_query_result(self, rows: List[sqlite3.Row]) -> List[Quote]:
         """
         Build the list of quote objects returned by a query
 
@@ -114,13 +113,13 @@ class DBClient(object):
 
         return quotes
 
-    def close_connection(self):
+    def close_connection(self) -> None:
         """
         Close connection to the database
         """
         self.conn.close()
 
-    def insert_quote(self, author: str, quote: str, created_at: str):
+    def insert_quote(self, author: str, quote: str, created_at: str) -> None:
         """
         Insert a quote into the database
 
@@ -131,7 +130,7 @@ class DBClient(object):
         params = (author, quote, created_at)
         query = 'INSERT INTO quotes (author, quote, created_at) VALUES (?, ?, ?)'
 
-        self.__execute_query(self.conn, query, params)
+        self.__execute_query(query, params)
 
     def get_all_quotes(self) -> List[Quote]:
         """
@@ -145,9 +144,9 @@ class DBClient(object):
             ORDER BY created_at DESC
         '''
 
-        ret = self.__execute_query(self.conn, query)
+        ret = self.__execute_query(query)
 
-        return self._build_quotes_from_query_result(ret.fetchall())
+        return self.__build_quotes_from_query_result(ret.fetchall())
 
     def get_quotes_for_author(self, author: str) -> List[Quote]:
         """
@@ -165,11 +164,11 @@ class DBClient(object):
             ORDER BY created_at DESC
         '''
 
-        ret = self.__execute_query(self.conn, query, params)
+        ret = self.__execute_query(query, params)
 
-        return self._build_quotes_from_query_result(ret.fetchall())
+        return self.__build_quotes_from_query_result(ret.fetchall())
 
-    def delete_quote_from_database(self, id: int):
+    def delete_quote_from_database(self, id: int) -> None:
         """
         Delete a quote from the database for the given row
 
@@ -178,4 +177,4 @@ class DBClient(object):
         params = (id,)
         query = 'DELETE FROM quotes WHERE id=?'
 
-        self.__execute_query(self.conn, query, params)
+        self.__execute_query(query, params)
