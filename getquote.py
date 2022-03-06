@@ -71,7 +71,7 @@ def get_quotes(author, num_quotes):
 
     for quote in quotes:
         if quote.get('title') == 'view quote' and len(results) < num_quotes:
-            results.append(quote)
+            results.append(quote.getText().strip())
 
     return results
 
@@ -81,7 +81,7 @@ def print_quotes(quotes, author):
     print('-' * 45)
 
     for idx, quote in enumerate(quotes):
-        print('{}. {}'.format(idx, quote.getText().strip()))
+        print('{}. {}'.format(idx, quote))
         print('-' * 45)
 
 
@@ -104,7 +104,7 @@ def save_quotes(db_client, quotes, author):
                 # CASE 3 [BASE CASE]. Add selected quote to database
                 else:
                     created_at = datetime.now().isoformat()
-                    quote = quotes[choice].getText().strip()
+                    quote = quotes[choice]
                     db_client.insert_quote(author, quote, created_at)
 
                     print('Saved the quote you picked by {}. Good choice!'.format(author))
