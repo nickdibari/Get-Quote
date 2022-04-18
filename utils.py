@@ -16,6 +16,14 @@ class Quote(object):
     def __str__(self):
         return f'{self.id}  | {self.author}  | {self.quote}  | {self.created_at}'
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'author': self.author,
+            'quote': self.quote,
+            'created_at': self.created_at
+        }
+
 
 class DBClient(object):
     """Client for interacting with database for the application"""
