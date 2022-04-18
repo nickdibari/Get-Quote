@@ -10,6 +10,8 @@
 import argparse
 import sys
 
+from tabulate import tabulate
+
 import settings
 from utils import DBClient
 
@@ -87,11 +89,7 @@ def print_quotes(db_client):
         print('Your database is empty!')
         return
 
-    print('ID | Author | Quote | Created At |')
-
-    for quote in quotes:
-        print(quote)
-        print('-' * 45)
+    print(tabulate([quote.to_dict() for quote in quotes], headers='keys'))
 
 
 def delete_quotes(db_client):
@@ -99,11 +97,7 @@ def delete_quotes(db_client):
     Delete a specific quote from the database
     TODO: Add option to send author name to function as kwarg
     """
-    quotes = db_client.get_all_quotes()
-
-    print('ID | Author | Quote')
-    for quote in quotes:
-        print(quote)
+    print_quotes(db_client)
 
     choice = input('Please select the number of the quote to delete: ')
     confirm = input('Are you sure you want to delete this quote (y/n): ')
@@ -136,10 +130,7 @@ def search_quotes(db_client, to_search=None):
 
         else:
             print('Found the following quotes by {}'.format(to_search))
-            print('-' * 45)
-            for quote in quotes:
-                print(quote)
-                print('-' * 45)
+            print(tabulate([quote.to_dict() for quote in quotes], headers='keys'))
 
         if flag:
             break
@@ -165,10 +156,11 @@ def dump_quotes(db_client, file_name=None):
     if not file_name.endswith('.txt'):
         file_name += '.txt'
 
+    quotes = db_client.get_all_quotes()
+
     with open(file_name, 'w') as f:
-        for quote in db_client.get_all_quotes():
-            f.write('{0}: {1}\n'.format(quote.author, quote.quote))
-            f.write('-' * 90 + '\n')
+        f.write(tabulate([quote.to_dict() for quote in quotes], headers='keys'))
+        f.write('\n')
 
     print('Done! Your quotes can be found in {}'.format(file_name))
 
